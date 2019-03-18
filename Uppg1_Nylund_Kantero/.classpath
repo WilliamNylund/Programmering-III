@@ -6,10 +6,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/williamnylund/Desktop/Skola/ProgIII/Programmering-III/Uppg1_Nylund_Kantero/lib/xchart-3.5.4.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="lib/xchart-3.5.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
