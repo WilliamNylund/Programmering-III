@@ -1,7 +1,8 @@
-package uppgifter;
+package view;
 
 import javax.swing.*;
 import JSON.JSONObject;
+import controller.DataManager;
 import JSON.JSONArray;
 import JSON.JSONException;
 import java.awt.*;
@@ -140,13 +141,13 @@ public class Window extends JFrame {
 				
 				try {
 					textArea.setText(null);
-					textArea.append(DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize));
+					textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize));
 					
-					if(dataSeries.equals("open")) chart.updateXYSeries("Stock", DataManager.xlist, DataManager.openGraph, null);
-					else if(dataSeries.equals("high")) chart.updateXYSeries("Stock", DataManager.xlist, DataManager.highGraph, null);
-					else if(dataSeries.equals("low")) chart.updateXYSeries("Stock", DataManager.xlist, DataManager.lowGraph, null);
-					else if(dataSeries.equals("close")) chart.updateXYSeries("Stock", DataManager.xlist, DataManager.closeGraph, null);
-					else if(dataSeries.equals("volume")) chart.updateXYSeries("Stock", DataManager.xlist, DataManager.volumeGraph, null);
+					if(dataSeries.equals("open")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
+					else if(dataSeries.equals("high")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
+					else if(dataSeries.equals("low")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
+					else if(dataSeries.equals("close")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
+					else if(dataSeries.equals("volume")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
 					pnlChart.repaint();
 					
 					
@@ -155,28 +156,28 @@ public class Window extends JFrame {
 							textArea.setText(null);
 							String dataSeries = (String) comboBox1.getSelectedItem();
 							if(dataSeries.equals("open")) {
-								textArea.append(DataManager.openStr);
-								chart.updateXYSeries("Stock", DataManager.xlist, DataManager.openGraph, null);
+								textArea.append(model.Model.openStr);
+								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
 							}
 							else if(dataSeries.equals("high")) {
-								textArea.append(DataManager.highStr);
-								chart.updateXYSeries("Stock", DataManager.xlist, DataManager.highGraph, null);
+								textArea.append(model.Model.highStr);
+								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
 							}
 							else if(dataSeries.equals("low")) {
-								textArea.append(DataManager.lowStr);
-								chart.updateXYSeries("Stock", DataManager.xlist, DataManager.lowGraph, null);
+								textArea.append(model.Model.lowStr);
+								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
 							}
 							else if(dataSeries.equals("close")) {
-								textArea.append(DataManager.closeStr);
-								chart.updateXYSeries("Stock", DataManager.xlist, DataManager.closeGraph, null);
+								textArea.append(model.Model.closeStr);
+								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
 							}
 							else if(dataSeries.equals("volume")) {
-								textArea.append(DataManager.volumeStr);
-								chart.updateXYSeries("Stock", DataManager.xlist, DataManager.volumeGraph, null);
+								textArea.append(model.Model.volumeStr);
+								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
 							}
-							else if(dataSeries.equals("adjusted close")) textArea.append(DataManager.adjustedCloseStr);
-							else if(dataSeries.equals("dividend amount")) textArea.append(DataManager.dividendAmountStr);
-							else if(dataSeries.equals("split coefficient")) textArea.append(DataManager.splitCoefficientStr);
+							else if(dataSeries.equals("adjusted close")) textArea.append(model.Model.adjustedCloseStr);
+							else if(dataSeries.equals("dividend amount")) textArea.append(model.Model.dividendAmountStr);
+							else if(dataSeries.equals("split coefficient")) textArea.append(model.Model.splitCoefficientStr);
 							pnlChart.repaint();
 						}
 					});

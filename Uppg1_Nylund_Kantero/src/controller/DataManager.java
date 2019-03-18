@@ -1,4 +1,4 @@
-package uppgifter;
+package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,24 +12,8 @@ import java.util.TreeMap;
 import JSON.JSONObject;
 
 public class DataManager {
-	static String openStr = "===Showing data for 1. open===\n";
-	static String highStr = "===Showing data for 2. high===\n";
-	static String lowStr = "===Showing data for 3. low===\n";
-	static String closeStr = "===Showing data for 4. close===\n";
-	static String volumeStr = "===Showing data for 5. volume===\n";
-	static String adjustedCloseStr = "===Showing data for 6. adjusted close===\n";
-	static String dividendAmountStr = "===Showing data for 7. dividend amount===\n";
-	static String splitCoefficientStr = "===Showing data for 8. split coefficient===\n";
-	
-	static ArrayList openGraph = new ArrayList<Double>();
-	static ArrayList highGraph = new ArrayList<Double>();
-	static ArrayList lowGraph = new ArrayList<Double>();
-	static ArrayList closeGraph = new ArrayList<Double>();
-	static ArrayList volumeGraph = new ArrayList<Double>();
-	static ArrayList xlist = new ArrayList<Double>(); //Denna lista består av 0, 1, 2...=> open.size() för att få gjort grafen med koordinater
 
-	
-	static String getData(String dataSeries, String ts, String sy, String ti, String os) throws IOException {
+	public static String getData(String dataSeries, String ts, String sy, String ti, String os) throws IOException {
 		String url = "https://www.alphavantage.co/query?function=" + ts + "&symbol=" + sy + "&interval="+ ti +"&outputsize="+ os +"&apikey=INA6YDFMZ7TW5X4I";
 		String date = null;
 		String ds = null;
@@ -126,68 +110,68 @@ public class DataManager {
 		for(Map.Entry<String,String> entry : openMap.entrySet()) {
 			  String key = entry.getKey();
 			  String value = entry.getValue();
-			  openStr += "Date: " + key + ": " + value + "\n";
-			  openGraph.add(Double.valueOf(value));
+			  model.Model.openStr += "Date: " + key + ": " + value + "\n";
+			  model.Model.openGraph.add(Double.valueOf(value));
 		}
 		for(Map.Entry<String,String> entry : highMap.entrySet()) {
 			  String key = entry.getKey();
 			  String value = entry.getValue();
-			  highStr += "Date: " + key + ": " + value + "\n";
-			  highGraph.add(Double.valueOf(value));
+			  model.Model.highStr += "Date: " + key + ": " + value + "\n";
+			  model.Model.highGraph.add(Double.valueOf(value));
 		}
 		for(Map.Entry<String,String> entry : lowMap.entrySet()) {
 			  String key = entry.getKey();
 			  String value = entry.getValue();
-			  lowStr += "Date: " + key + ": " + value + "\n";
-			  lowGraph.add(Double.valueOf(value));
+			  model.Model.lowStr += "Date: " + key + ": " + value + "\n";
+			  model.Model.lowGraph.add(Double.valueOf(value));
 		}
 		for(Map.Entry<String,String> entry : closeMap.entrySet()) {
 			  String key = entry.getKey();
 			  String value = entry.getValue();
-			  closeStr += "Date: " + key + ": " + value + "\n";
-			  closeGraph.add(Double.valueOf(value));
+			  model.Model.closeStr += "Date: " + key + ": " + value + "\n";
+			  model.Model.closeGraph.add(Double.valueOf(value));
 		}
 		for(Map.Entry<String,String> entry : volumeMap.entrySet()) {
 			  String key = entry.getKey();
 			  String value = entry.getValue();
-			  volumeStr += "Date: " + key + ": " + value + "\n";
-			  volumeGraph.add(Double.valueOf(value));
+			  model.Model.volumeStr += "Date: " + key + ": " + value + "\n";
+			  model.Model.volumeGraph.add(Double.valueOf(value));
 		}
 		if (ts == "TIME_SERIES_DAILY_ADJUSTED" || ts == "TIME_SERIES_WEEKLY_ADJUSTED" || ts == "TIME_SERIES_MONTHLY_ADJUSTED") {
 			for(Map.Entry<String,String> entry : adjustedCloseMap.entrySet()) {
 				  String key = entry.getKey();
 				  String value = entry.getValue();
-				  adjustedCloseStr += "Date: " + key + ": " + value + "\n";
+				  model.Model.adjustedCloseStr += "Date: " + key + ": " + value + "\n";
 			}
 			for(Map.Entry<String,String> entry : dividendAmountMap.entrySet()) {
 				  String key = entry.getKey();
 				  String value = entry.getValue();
-				  dividendAmountStr += "Date: " + key + ": " + value + "\n";
+				  model.Model.dividendAmountStr += "Date: " + key + ": " + value + "\n";
 			}
 			if (ts == "TIME_SERIES_DAILY_ADJUSTED") {
 				for(Map.Entry<String,String> entry : splitCoefficientMap.entrySet()) {
 					  String key = entry.getKey();
 					  String value = entry.getValue();
-					  splitCoefficientStr += "Date: " + key + ": " + value + "\n";
+					  model.Model.splitCoefficientStr += "Date: " + key + ": " + value + "\n";
 				}
 			}
 			
 		}
 		
 		for(int i = 0; i <open.size(); i++) {
-			xlist.add(i);
+			model.Model.xlist.add(i);
 		}
 		reverseLists(); //svänger om ordningen på listan med värden till graferna för att gå från äldst => nyast
 		
 		
-		if(dataSeries.equals("open")) return openStr;
-		else if(dataSeries.equals("high")) return highStr;
-		else if(dataSeries.equals("low")) return lowStr;
-		else if(dataSeries.equals("close")) return closeStr;
-		else if(dataSeries.equals("split coefficient")) return splitCoefficientStr;
-		else if(dataSeries.equals("dividend amount")) return dividendAmountStr;
-		else if(dataSeries.equals("adjusted close")) return adjustedCloseStr;
-		else return volumeStr;
+		if(dataSeries.equals("open")) return model.Model.openStr;
+		else if(dataSeries.equals("high")) return model.Model.highStr;
+		else if(dataSeries.equals("low")) return model.Model.lowStr;
+		else if(dataSeries.equals("close")) return model.Model.closeStr;
+		else if(dataSeries.equals("split coefficient")) return model.Model.splitCoefficientStr;
+		else if(dataSeries.equals("dividend amount")) return model.Model.dividendAmountStr;
+		else if(dataSeries.equals("adjusted close")) return model.Model.adjustedCloseStr;
+		else return model.Model.volumeStr;
 	}
 	
 	static String getTimeSeries(String ts, String ti) { //hämtar rätt arraynamn
@@ -202,27 +186,27 @@ public class DataManager {
 		
 	}
 	private static void reset() {
-		openStr = "===Showing data for 1. open===\n";
-		highStr = "===Showing data for 2. high===\n";
-		lowStr = "===Showing data for 3. low===\n";
-		closeStr = "===Showing data for 4. close===\n";
-		volumeStr = "===Showing data for 5. volume===\n";
-		adjustedCloseStr = "===Showing data for 6. adjusted close===\n";
-		dividendAmountStr = "===Showing data for 7. dividend amount===\n";
-		splitCoefficientStr = "===Showing data for 8. split coefficient===\n";
-		openGraph.clear();
-		highGraph.clear();
-		lowGraph.clear();
-		closeGraph.clear();
-		volumeGraph.clear();
-		xlist.clear();
+		model.Model.openStr = "===Showing data for 1. open===\n";
+		model.Model.highStr = "===Showing data for 2. high===\n";
+		model.Model.lowStr = "===Showing data for 3. low===\n";
+		model.Model.closeStr = "===Showing data for 4. close===\n";
+		model.Model.volumeStr = "===Showing data for 5. volume===\n";
+		model.Model.adjustedCloseStr = "===Showing data for 6. adjusted close===\n";
+		model.Model.dividendAmountStr = "===Showing data for 7. dividend amount===\n";
+		model.Model.splitCoefficientStr = "===Showing data for 8. split coefficient===\n";
+		model.Model.openGraph.clear();
+		model.Model.highGraph.clear();
+		model.Model.lowGraph.clear();
+		model.Model.closeGraph.clear();
+		model.Model.volumeGraph.clear();
+		model.Model.xlist.clear();
 	}
 	private static void reverseLists() {
-		Collections.reverse(openGraph);
-		Collections.reverse(highGraph);
-		Collections.reverse(lowGraph);
-		Collections.reverse(closeGraph);
-		Collections.reverse(volumeGraph);
+		Collections.reverse(model.Model.openGraph);
+		Collections.reverse(model.Model.highGraph);
+		Collections.reverse(model.Model.lowGraph);
+		Collections.reverse(model.Model.closeGraph);
+		Collections.reverse(model.Model.volumeGraph);
 	}
 
 }

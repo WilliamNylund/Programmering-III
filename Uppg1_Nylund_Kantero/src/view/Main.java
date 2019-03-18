@@ -1,4 +1,4 @@
-package uppgifter;
+package view;
 
 
 public class Main {

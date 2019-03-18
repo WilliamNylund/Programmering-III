@@ -1,4 +1,4 @@
-package uppgifter;
+package controller;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
