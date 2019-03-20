@@ -1,15 +1,19 @@
 package controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 
 import JSON.JSONObject;
+import model.Model;
 
 public class DataManager {
 
@@ -18,7 +22,7 @@ public class DataManager {
 		String date = null;
 		String ds = null;
 		reset();
-		
+		System.out.println(url);
 		ArrayList open = new ArrayList();
 		ArrayList high = new ArrayList();
 		ArrayList low = new ArrayList();
@@ -32,8 +36,8 @@ public class DataManager {
 		
 		
 		JSONObject json = JsonReader.readJsonFromUrl(url);
-		String TimeSeries = getTimeSeries(ts,ti);
-		JSONObject tsObject =  (JSONObject) (json.get(TimeSeries));
+		String timeSeries = getTimeSeries(ts, ti);
+		JSONObject tsObject =  (JSONObject) (json.get(timeSeries)); 
 		
 		Iterator<String> keys = tsObject.keys();
 		while(keys.hasNext()) { //loopar genom Time Series
@@ -176,12 +180,17 @@ public class DataManager {
 	
 	static String getTimeSeries(String ts, String ti) { //hämtar rätt arraynamn
 		String TimeSeries = null;
-		if (ts=="TIME_SERIES_INTRADAY") TimeSeries =  "Time Series (" + ti + ")";
-		else if (ts == "TIME_SERIES_DAILY" || ts == "TIME_SERIES_DAILY_ADJUSTED") TimeSeries = "Time Series (Daily)";
-		else if (ts == "TIME_SERIES_WEEKLY") TimeSeries = "Weekly Time Series";
-		else if (ts == "TIME_SERIES_WEEKLY_ADJUSTED") TimeSeries = "Weekly Adjusted Time Series";
-		else if (ts == "TIME_SERIES_MONTHLY") TimeSeries = "Monthly Time Series";
-		else if (ts == "TIME_SERIES_MONTHLY_ADJUSTED") TimeSeries = "Monthly Adjusted Time Series";
+		System.out.println(ts);
+		System.out.println(ti);
+		if (ts.equals("TIME_SERIES_INTRADAY")) TimeSeries =  "Time Series (" + ti + ")";
+		else if (ts.equals("TIME_SERIES_DAILY") || ts.equals("TIME_SERIES_DAILY_ADJUSTED")) TimeSeries = "Time Series (Daily)";
+		else if (ts.equals("TIME_SERIES_WEEKLY")) TimeSeries = "Weekly Time Series";
+		else if (ts.equals("TIME_SERIES_WEEKLY_ADJUSTED")) TimeSeries = "Weekly Adjusted Time Series";
+		else if (ts.equals("TIME_SERIES_MONTHLY")) TimeSeries = "Monthly Time Series";
+		else if (ts.equals("TIME_SERIES_MONTHLY_ADJUSTED")) TimeSeries = "Monthly Adjusted Time Series";
+		
+		
+		System.out.println(TimeSeries);
 		return TimeSeries;
 		
 	}
@@ -208,5 +217,33 @@ public class DataManager {
 		Collections.reverse(model.Model.closeGraph);
 		Collections.reverse(model.Model.volumeGraph);
 	}
+	public static void getChoices() throws FileNotFoundException {
+		
+		Scanner scanner = new Scanner(new FileReader("./iniFiles/StockAnalyzer.ini"));
+		String apiKey = scanner.nextLine().split("=")[1];
+		String timeSeries = scanner.nextLine().split("=")[1];
+		String symbol = scanner.nextLine().split("=")[1];
+		String timeInterval = scanner.nextLine().split("=")[1];
+		String outPutSize = scanner.nextLine().split("=")[1];
+		
+		String[] timeSeriesParts = timeSeries.split(", ");
+		String[] symbolParts = symbol.split(", ");
+		String[] timeIntervalParts = timeInterval.split(", ");
+		String[] outPutSizeParts = outPutSize.split(", ");
 
+		Model.apiKey = apiKey;
+		for (int i = 0; i < timeSeriesParts.length; i++) {
+			Model.timeSeriesChoices[i] = timeSeriesParts[i];
+		}
+		for (int i = 0; i < symbolParts.length; i++) {
+			Model.symbolChoices[i] = symbolParts[i];
+		}
+		for (int i = 0; i < timeIntervalParts.length; i++) {
+			Model.timeIntervalChoices[i] = timeIntervalParts[i];
+		}
+		Model.outPutSizeChoices[0] = outPutSizeParts[0];
+		Model.outPutSizeChoices[1] = outPutSizeParts[1];
+		
+	}
+	
 }

@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import JSON.JSONObject;
 import controller.DataManager;
+import model.Model;
 import JSON.JSONArray;
 import JSON.JSONException;
 import java.awt.*;
@@ -55,32 +56,35 @@ public class Window extends JFrame {
 		cons.gridy = 4;
 		panel.add(label5, cons);
 		
+		try {
+			DataManager.getChoices();
+		} catch (FileNotFoundException e2) {
+			System.out.println("file not found");
+		}
+		
 		String[] dataSeries = {"open", "high", "low", "close", "volume", "adjusted close", "dividend amount", "split coefficient"};
 		JComboBox<String> comboBox1 = new JComboBox<String>(dataSeries);
 		cons.gridx = 1;
 		cons.gridy = 0;
 		panel.add(comboBox1, cons);
 		
-		String[] timeSeries = { "TIME_SERIES_INTRADAY", "TIME_SERIES_DAILY", "TIME_SERIES_DAILY_ADJUSTED", "TIME_SERIES_WEEKLY", "TIME_SERIES_WEEKLY_ADJUSTED","TIME_SERIES_MONTHLY","TIME_SERIES_MONTHLY_ADJUSTED"};
-		JComboBox<String> comboBox2 = new JComboBox<String>(timeSeries);
+		
+		JComboBox<String> comboBox2 = new JComboBox<String>(Model.timeSeriesChoices);
 		cons.gridx = 1;
 		cons.gridy = 1;
 		panel.add(comboBox2, cons);
 		
-		String[] symbols = { "AAPL", "GOOG", "MSFT"};
-		JComboBox<String> comboBox3 = new JComboBox<String>(symbols);
+		JComboBox<String> comboBox3 = new JComboBox<String>(Model.symbolChoices);
 		cons.gridx = 1;
 		cons.gridy = 2;
 		panel.add(comboBox3, cons);
 		
-		String[] timeInterval = { "1min", "5min", "15min", "30min", "60min"};
-		JComboBox<String> comboBox4 = new JComboBox<String>(timeInterval);
+		JComboBox<String> comboBox4 = new JComboBox<String>(Model.timeIntervalChoices);
 		cons.gridx = 1;
 		cons.gridy = 3;
 		panel.add(comboBox4, cons);
 		
-		String[] outputSize = { "full", "compact"};
-		JComboBox<String> comboBox5 = new JComboBox<String>(outputSize);
+		JComboBox<String> comboBox5 = new JComboBox<String>(Model.outPutSizeChoices);
 		cons.gridx = 1;
 		cons.gridy = 4;
 		panel.add(comboBox5, cons);
@@ -192,11 +196,10 @@ public class Window extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String timeSeries = (String) comboBox2.getSelectedItem();
-				
-				if (timeSeries != "TIME_SERIES_INTRADAY") {
+				if (!timeSeries.equals("TIME_SERIES_INTRADAY")) {
 					comboBox4.setEnabled(false);
 				} else comboBox4.setEnabled(true);
-				if (timeSeries != "TIME_SERIES_INTRADAY" && timeSeries != "TIME_SERIES_DAILY" && timeSeries != "TIME_SERIES_DAILY_ADJUSTED") {
+				if (!timeSeries.equals("TIME_SERIES_INTRADAY") && !timeSeries.equals("TIME_SERIES_DAILY") && !timeSeries.equals("TIME_SERIES_DAILY_ADJUSTED")) {
 					comboBox5.setEnabled(false);
 				} else comboBox5.setEnabled(true);
 				

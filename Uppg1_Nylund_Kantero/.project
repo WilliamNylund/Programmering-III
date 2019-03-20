@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>iniFiles</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>iniFiles/StockAnalyzer.ini</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/iniFiles/StockAnalyzer.ini</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
