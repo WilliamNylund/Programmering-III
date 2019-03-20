@@ -17,12 +17,12 @@ import model.Model;
 
 public class DataManager {
 
-	public static String getData(String dataSeries, String ts, String sy, String ti, String os) throws IOException {
-		String url = "https://www.alphavantage.co/query?function=" + ts + "&symbol=" + sy + "&interval="+ ti +"&outputsize="+ os +"&apikey=INA6YDFMZ7TW5X4I";
+	public static String getData(String dataSeries, String ts, String sy, String ti, String os, String ak, String sd, String ed) throws IOException {
+		String url = "https://www.alphavantage.co/query?function=" + ts + "&symbol=" + sy + "&interval="+ ti +"&outputsize="+ os +"&apikey=" + ak;
 		String date = null;
 		String ds = null;
 		reset();
-		System.out.println(url);
+
 		ArrayList open = new ArrayList();
 		ArrayList high = new ArrayList();
 		ArrayList low = new ArrayList();
@@ -112,57 +112,91 @@ public class DataManager {
 		}
 		
 		for(Map.Entry<String,String> entry : openMap.entrySet()) {
-			  String key = entry.getKey();
-			  String value = entry.getValue();
-			  model.Model.openStr += "Date: " + key + ": " + value + "\n";
-			  model.Model.openGraph.add(Double.valueOf(value));
+			
+			String key = entry.getKey();
+			String value = entry.getValue();
+			int a = key.compareTo(sd);
+			int b = key.compareTo(ed);
+			if ( a >= 0 && b <= 0) {
+				model.Model.openStr += "Date: " + key + ": " + value + "\n";
+				model.Model.openGraph.add(Double.valueOf(value));
+			}
 		}
+		
 		for(Map.Entry<String,String> entry : highMap.entrySet()) {
-			  String key = entry.getKey();
-			  String value = entry.getValue();
-			  model.Model.highStr += "Date: " + key + ": " + value + "\n";
-			  model.Model.highGraph.add(Double.valueOf(value));
+			String key = entry.getKey();
+			String value = entry.getValue();
+			int a = key.compareTo(sd);
+			int b = key.compareTo(ed);
+			if ( a >= 0 && b <= 0) {
+				model.Model.highStr += "Date: " + key + ": " + value + "\n";
+				model.Model.highGraph.add(Double.valueOf(value));
+			}
 		}
 		for(Map.Entry<String,String> entry : lowMap.entrySet()) {
-			  String key = entry.getKey();
-			  String value = entry.getValue();
-			  model.Model.lowStr += "Date: " + key + ": " + value + "\n";
-			  model.Model.lowGraph.add(Double.valueOf(value));
+			String key = entry.getKey();
+			String value = entry.getValue();
+			int a = key.compareTo(sd);
+			int b = key.compareTo(ed);
+			if ( a >= 0 && b <= 0) {
+				model.Model.lowStr += "Date: " + key + ": " + value + "\n";
+				model.Model.lowGraph.add(Double.valueOf(value));
+			}
 		}
 		for(Map.Entry<String,String> entry : closeMap.entrySet()) {
-			  String key = entry.getKey();
-			  String value = entry.getValue();
-			  model.Model.closeStr += "Date: " + key + ": " + value + "\n";
-			  model.Model.closeGraph.add(Double.valueOf(value));
+			String key = entry.getKey();
+			String value = entry.getValue();
+			int a = key.compareTo(sd);
+			int b = key.compareTo(ed);
+			if ( a >= 0 && b <= 0) {
+				model.Model.closeStr += "Date: " + key + ": " + value + "\n";
+				model.Model.closeGraph.add(Double.valueOf(value));
+			}
 		}
 		for(Map.Entry<String,String> entry : volumeMap.entrySet()) {
-			  String key = entry.getKey();
-			  String value = entry.getValue();
-			  model.Model.volumeStr += "Date: " + key + ": " + value + "\n";
-			  model.Model.volumeGraph.add(Double.valueOf(value));
+			String key = entry.getKey();
+			String value = entry.getValue();
+			int a = key.compareTo(sd);
+			int b = key.compareTo(ed);
+			if ( a >= 0 && b <= 0) {
+				model.Model.volumeStr += "Date: " + key + ": " + value + "\n";
+				model.Model.volumeGraph.add(Double.valueOf(value));
+			}
 		}
 		if (ts == "TIME_SERIES_DAILY_ADJUSTED" || ts == "TIME_SERIES_WEEKLY_ADJUSTED" || ts == "TIME_SERIES_MONTHLY_ADJUSTED") {
 			for(Map.Entry<String,String> entry : adjustedCloseMap.entrySet()) {
-				  String key = entry.getKey();
-				  String value = entry.getValue();
-				  model.Model.adjustedCloseStr += "Date: " + key + ": " + value + "\n";
+				String key = entry.getKey();
+				String value = entry.getValue();
+				int a = key.compareTo(sd);
+				int b = key.compareTo(ed);
+				if ( a >= 0 && b <= 0) {
+					model.Model.adjustedCloseStr += "Date: " + key + ": " + value + "\n";
+				}
 			}
 			for(Map.Entry<String,String> entry : dividendAmountMap.entrySet()) {
-				  String key = entry.getKey();
-				  String value = entry.getValue();
-				  model.Model.dividendAmountStr += "Date: " + key + ": " + value + "\n";
+				String key = entry.getKey();
+				String value = entry.getValue();
+				int a = key.compareTo(sd);
+				int b = key.compareTo(ed);
+				if ( a >= 0 && b <= 0) {
+					model.Model.dividendAmountStr += "Date: " + key + ": " + value + "\n";
+				}
 			}
 			if (ts == "TIME_SERIES_DAILY_ADJUSTED") {
 				for(Map.Entry<String,String> entry : splitCoefficientMap.entrySet()) {
-					  String key = entry.getKey();
-					  String value = entry.getValue();
-					  model.Model.splitCoefficientStr += "Date: " + key + ": " + value + "\n";
+					String key = entry.getKey();
+					String value = entry.getValue();
+					int a = key.compareTo(sd);
+					int b = key.compareTo(ed);
+					if ( a >= 0 && b <= 0) {
+						model.Model.splitCoefficientStr += "Date: " + key + ": " + value + "\n";
+					}
 				}
 			}
 			
 		}
 		
-		for(int i = 0; i <open.size(); i++) {
+		for(int i = 0; i < Model.openGraph.size(); i++) {
 			model.Model.xlist.add(i);
 		}
 		reverseLists(); //svänger om ordningen på listan med värden till graferna för att gå från äldst => nyast
@@ -180,8 +214,7 @@ public class DataManager {
 	
 	static String getTimeSeries(String ts, String ti) { //hämtar rätt arraynamn
 		String TimeSeries = null;
-		System.out.println(ts);
-		System.out.println(ti);
+		
 		if (ts.equals("TIME_SERIES_INTRADAY")) TimeSeries =  "Time Series (" + ti + ")";
 		else if (ts.equals("TIME_SERIES_DAILY") || ts.equals("TIME_SERIES_DAILY_ADJUSTED")) TimeSeries = "Time Series (Daily)";
 		else if (ts.equals("TIME_SERIES_WEEKLY")) TimeSeries = "Weekly Time Series";
@@ -189,8 +222,6 @@ public class DataManager {
 		else if (ts.equals("TIME_SERIES_MONTHLY")) TimeSeries = "Monthly Time Series";
 		else if (ts.equals("TIME_SERIES_MONTHLY_ADJUSTED")) TimeSeries = "Monthly Adjusted Time Series";
 		
-		
-		System.out.println(TimeSeries);
 		return TimeSeries;
 		
 	}

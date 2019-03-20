@@ -31,30 +31,46 @@ public class Window extends JFrame {
 		panel.setLayout(gridBag);
 		
 		cons.fill = GridBagConstraints.HORIZONTAL;
-		JLabel label1 = new JLabel("Data Series");
+				
+		JLabel label0 = new JLabel("Api Key");
 		cons.gridx = 0;
 		cons.gridy = 0;
-		panel.add(label1, cons);
+		panel.add(label0, cons);
 		
+		JLabel label1 = new JLabel("Data Series");
 		cons.gridx = 0;
 		cons.gridy = 1;
+		panel.add(label1, cons);
+		
 		JLabel label2 = new JLabel("Time Series");
+		cons.gridx = 0;
+		cons.gridy = 2;
 		panel.add(label2, cons);
 		
 		JLabel label3 = new JLabel("Symbol");
 		cons.gridx = 0;
-		cons.gridy = 2;
+		cons.gridy = 3;
 		panel.add(label3, cons);
 		
-		cons.gridx = 0;
-		cons.gridy = 3;
 		JLabel label4 = new JLabel("Time Interval");
+		cons.gridx = 0;
+		cons.gridy = 4;
 		panel.add(label4, cons);
 		
 		JLabel label5 = new JLabel("Output Size");
 		cons.gridx = 0;
-		cons.gridy = 4;
+		cons.gridy = 5;
 		panel.add(label5, cons);
+		
+		JLabel startLabel = new JLabel("Start date");
+		cons.gridx = 0;
+		cons.gridy = 6;
+		panel.add(startLabel, cons);
+		
+		JLabel endLabel = new JLabel("End date");
+		cons.gridx = 0;
+		cons.gridy = 7;
+		panel.add(endLabel, cons);
 		
 		try {
 			DataManager.getChoices();
@@ -62,38 +78,56 @@ public class Window extends JFrame {
 			System.out.println("file not found");
 		}
 		
+		JTextField apiEdit = new JTextField();
+		apiEdit.setText(Model.apiKey);
+		cons.gridx = 1;
+		cons.gridy = 0;
+		panel.add(apiEdit, cons);
+		
 		String[] dataSeries = {"open", "high", "low", "close", "volume", "adjusted close", "dividend amount", "split coefficient"};
 		JComboBox<String> comboBox1 = new JComboBox<String>(dataSeries);
 		cons.gridx = 1;
-		cons.gridy = 0;
+		cons.gridy = 1;
 		panel.add(comboBox1, cons);
 		
 		
 		JComboBox<String> comboBox2 = new JComboBox<String>(Model.timeSeriesChoices);
 		cons.gridx = 1;
-		cons.gridy = 1;
+		cons.gridy = 2;
 		panel.add(comboBox2, cons);
 		
 		JComboBox<String> comboBox3 = new JComboBox<String>(Model.symbolChoices);
 		cons.gridx = 1;
-		cons.gridy = 2;
+		cons.gridy = 3;
 		panel.add(comboBox3, cons);
 		
 		JComboBox<String> comboBox4 = new JComboBox<String>(Model.timeIntervalChoices);
 		cons.gridx = 1;
-		cons.gridy = 3;
+		cons.gridy = 4;
 		panel.add(comboBox4, cons);
 		
 		JComboBox<String> comboBox5 = new JComboBox<String>(Model.outPutSizeChoices);
 		cons.gridx = 1;
-		cons.gridy = 4;
+		cons.gridy = 5;
 		panel.add(comboBox5, cons);
+		
+		JTextField startDate = new JTextField();
+		startDate.setText("yyyy-mm-dd");
+		cons.gridx = 1;
+		cons.gridy = 6;
+		panel.add(startDate, cons);
+		
+		JTextField endDate = new JTextField();
+		endDate.setText("yyyy-mm-dd");
+		cons.gridx = 1;
+		cons.gridy = 7;
+		panel.add(endDate, cons);
+		
 		cons.fill = GridBagConstraints.NONE;
-
 		
 		JButton button = new JButton("---Do query---");
 		cons.gridx = 1;
-		cons.gridy = 5;
+		cons.gridy = 8;
 		panel.add(button, cons);
 		
 		
@@ -105,7 +139,7 @@ public class Window extends JFrame {
 		cons.gridheight = 2;
 		cons.gridwidth = 2;
 		cons.gridx = 0;
-		cons.gridy = 6;
+		cons.gridy = 9;
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
 		panel.add(scrollPane, cons);
@@ -123,8 +157,8 @@ public class Window extends JFrame {
 		
 		cons.gridheight = 3;
 		cons.gridwidth = 3;
-		cons.gridx = 2;
-		cons.gridy = 7;
+		cons.gridx = 2; // 2
+		cons.gridy = 10;// 10 
 		
 		panel.add(pnlChart, cons);
 	
@@ -142,10 +176,13 @@ public class Window extends JFrame {
 				String symbol = (String) comboBox3.getSelectedItem();
 				String timeInterval = (String) comboBox4.getSelectedItem();
 				String outputSize = (String) comboBox5.getSelectedItem();
+				String apiKey = apiEdit.getText();
+				String sd = startDate.getText();
+				String ed = endDate.getText();
 				
 				try {
 					textArea.setText(null);
-					textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize));
+					textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
 					
 					if(dataSeries.equals("open")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
 					else if(dataSeries.equals("high")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
