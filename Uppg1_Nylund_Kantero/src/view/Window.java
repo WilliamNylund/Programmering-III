@@ -177,9 +177,9 @@ public class Window extends JFrame {
 				String timeInterval = (String) comboBox4.getSelectedItem();
 				String outputSize = (String) comboBox5.getSelectedItem();
 				String apiKey = apiEdit.getText();
-				String sd = startDate.getText();
+				String sd = startDate.getText(); //check dateIsValid();
 				String ed = endDate.getText();
-				
+
 				try {
 					textArea.setText(null);
 					textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
@@ -243,6 +243,7 @@ public class Window extends JFrame {
 			}
 		});
 	}
+	
 
 	
 }

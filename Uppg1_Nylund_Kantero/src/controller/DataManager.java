@@ -3,6 +3,7 @@ package controller;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,8 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
-
-
 import JSON.JSONObject;
 import model.Model;
 
@@ -117,7 +116,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) {
+			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 				model.Model.openStr += "Date: " + key + ": " + value + "\n";
 				model.Model.openGraph.add(Double.valueOf(value));
 			}
@@ -128,7 +127,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) {
+			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 				model.Model.highStr += "Date: " + key + ": " + value + "\n";
 				model.Model.highGraph.add(Double.valueOf(value));
 			}
@@ -138,7 +137,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) {
+			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 				model.Model.lowStr += "Date: " + key + ": " + value + "\n";
 				model.Model.lowGraph.add(Double.valueOf(value));
 			}
@@ -148,7 +147,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) {
+			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 				model.Model.closeStr += "Date: " + key + ": " + value + "\n";
 				model.Model.closeGraph.add(Double.valueOf(value));
 			}
@@ -158,7 +157,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) {
+			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 				model.Model.volumeStr += "Date: " + key + ": " + value + "\n";
 				model.Model.volumeGraph.add(Double.valueOf(value));
 			}
@@ -169,7 +168,7 @@ public class DataManager {
 				String value = entry.getValue();
 				int a = key.compareTo(sd);
 				int b = key.compareTo(ed);
-				if ( a >= 0 && b <= 0) {
+				if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 					model.Model.adjustedCloseStr += "Date: " + key + ": " + value + "\n";
 				}
 			}
@@ -178,7 +177,7 @@ public class DataManager {
 				String value = entry.getValue();
 				int a = key.compareTo(sd);
 				int b = key.compareTo(ed);
-				if ( a >= 0 && b <= 0) {
+				if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 					model.Model.dividendAmountStr += "Date: " + key + ": " + value + "\n";
 				}
 			}
@@ -188,7 +187,7 @@ public class DataManager {
 					String value = entry.getValue();
 					int a = key.compareTo(sd);
 					int b = key.compareTo(ed);
-					if ( a >= 0 && b <= 0) {
+					if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
 						model.Model.splitCoefficientStr += "Date: " + key + ": " + value + "\n";
 					}
 				}
@@ -276,5 +275,16 @@ public class DataManager {
 		Model.outPutSizeChoices[1] = outPutSizeParts[1];
 		
 	}
+	
+	public static boolean isValidDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        try {
+            dateFormat.parse(date.trim());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 	
 }
