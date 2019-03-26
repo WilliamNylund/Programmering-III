@@ -16,7 +16,7 @@ import org.knowm.*;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.XYStyler;
 
-public class Window extends JFrame {
+public class Window extends JFrame implements FocusListener {
 	
 	public Window() {
 		
@@ -47,29 +47,34 @@ public class Window extends JFrame {
 		cons.gridy = 2;
 		panel.add(label2, cons);
 		
-		JLabel label3 = new JLabel("Symbol");
+		JLabel label3 = new JLabel("Symbol 1");
 		cons.gridx = 0;
 		cons.gridy = 3;
 		panel.add(label3, cons);
 		
-		JLabel label4 = new JLabel("Time Interval");
+		JLabel label31 = new JLabel("Symbol 2");
 		cons.gridx = 0;
 		cons.gridy = 4;
+		panel.add(label31, cons);
+		
+		JLabel label4 = new JLabel("Time Interval");
+		cons.gridx = 0;
+		cons.gridy = 5;
 		panel.add(label4, cons);
 		
 		JLabel label5 = new JLabel("Output Size");
 		cons.gridx = 0;
-		cons.gridy = 5;
+		cons.gridy = 6;
 		panel.add(label5, cons);
 		
-		JLabel startLabel = new JLabel("Start date");
-		cons.gridx = 0;
-		cons.gridy = 6;
-		panel.add(startLabel, cons);
-		
-		JLabel endLabel = new JLabel("End date");
+		JLabel startLabel = new JLabel("Start date (yyyy-mm-dd)");
 		cons.gridx = 0;
 		cons.gridy = 7;
+		panel.add(startLabel, cons);
+		
+		JLabel endLabel = new JLabel("End date (yyyy-mm-dd)");
+		cons.gridx = 0;
+		cons.gridy = 8;
 		panel.add(endLabel, cons);
 		
 		try {
@@ -101,33 +106,38 @@ public class Window extends JFrame {
 		cons.gridy = 3;
 		panel.add(comboBox3, cons);
 		
-		JComboBox<String> comboBox4 = new JComboBox<String>(Model.timeIntervalChoices);
+		JComboBox<String> comboBox31 = new JComboBox<String>(Model.symbolChoices);
 		cons.gridx = 1;
 		cons.gridy = 4;
+		panel.add(comboBox31, cons);
+		
+		JComboBox<String> comboBox4 = new JComboBox<String>(Model.timeIntervalChoices);
+		cons.gridx = 1;
+		cons.gridy = 5;
 		panel.add(comboBox4, cons);
 		
 		JComboBox<String> comboBox5 = new JComboBox<String>(Model.outPutSizeChoices);
 		cons.gridx = 1;
-		cons.gridy = 5;
+		cons.gridy = 6;
 		panel.add(comboBox5, cons);
 		
 		JTextField startDate = new JTextField();
-		startDate.setText("yyyy-mm-dd");
-		cons.gridx = 1;
-		cons.gridy = 6;
-		panel.add(startDate, cons);
-		
-		JTextField endDate = new JTextField();
-		endDate.setText("yyyy-mm-dd");
 		cons.gridx = 1;
 		cons.gridy = 7;
+		panel.add(startDate, cons);
+		
+
+		
+		JTextField endDate = new JTextField();
+		cons.gridx = 1;
+		cons.gridy = 8;
 		panel.add(endDate, cons);
 		
 		cons.fill = GridBagConstraints.NONE;
 		
 		JButton button = new JButton("---Do query---");
 		cons.gridx = 1;
-		cons.gridy = 8;
+		cons.gridy = 9;
 		panel.add(button, cons);
 		
 		
@@ -139,7 +149,7 @@ public class Window extends JFrame {
 		cons.gridheight = 2;
 		cons.gridwidth = 2;
 		cons.gridx = 0;
-		cons.gridy = 9;
+		cons.gridy = 10;
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
 		panel.add(scrollPane, cons);
@@ -158,7 +168,7 @@ public class Window extends JFrame {
 		cons.gridheight = 3;
 		cons.gridwidth = 3;
 		cons.gridx = 2; // 2
-		cons.gridy = 10;// 10 
+		cons.gridy = 11;// 10 
 		
 		panel.add(pnlChart, cons);
 	
@@ -171,59 +181,66 @@ public class Window extends JFrame {
 		button.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String dataSeries = (String) comboBox1.getSelectedItem();
-				String timeSeries = (String) comboBox2.getSelectedItem();
-				String symbol = (String) comboBox3.getSelectedItem();
-				String timeInterval = (String) comboBox4.getSelectedItem();
-				String outputSize = (String) comboBox5.getSelectedItem();
-				String apiKey = apiEdit.getText();
-				String sd = startDate.getText(); //check dateIsValid();
-				String ed = endDate.getText();
-
-				try {
+				if (DataManager.isValidDate(startDate.getText()) && DataManager.isValidDate(endDate.getText())) {
+					String dataSeries = (String) comboBox1.getSelectedItem();
+					String timeSeries = (String) comboBox2.getSelectedItem();
+					String symbol = (String) comboBox3.getSelectedItem();
+					String symbol2 = (String) comboBox31.getSelectedItem();
+					String timeInterval = (String) comboBox4.getSelectedItem();
+					String outputSize = (String) comboBox5.getSelectedItem();
+					String apiKey = apiEdit.getText();
+					String sd = startDate.getText();
+					String ed = endDate.getText();
+					
+					try {
+						textArea.setText(null);
+						if (ed.equals("")) ed = "9999";
+						textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
+						
+						if(dataSeries.equals("open")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
+						else if(dataSeries.equals("high")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
+						else if(dataSeries.equals("low")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
+						else if(dataSeries.equals("close")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
+						else if(dataSeries.equals("volume")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
+						pnlChart.repaint();
+						
+						
+						comboBox1.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								textArea.setText(null);
+								String dataSeries = (String) comboBox1.getSelectedItem();
+								if(dataSeries.equals("open")) {
+									textArea.append(model.Model.openStr);
+									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
+								}
+								else if(dataSeries.equals("high")) {
+									textArea.append(model.Model.highStr);
+									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
+								}
+								else if(dataSeries.equals("low")) {
+									textArea.append(model.Model.lowStr);
+									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
+								}
+								else if(dataSeries.equals("close")) {
+									textArea.append(model.Model.closeStr);
+									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
+								}
+								else if(dataSeries.equals("volume")) {
+									textArea.append(model.Model.volumeStr);
+									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
+								}
+								else if(dataSeries.equals("adjusted close")) textArea.append(model.Model.adjustedCloseStr);
+								else if(dataSeries.equals("dividend amount")) textArea.append(model.Model.dividendAmountStr);
+								else if(dataSeries.equals("split coefficient")) textArea.append(model.Model.splitCoefficientStr);
+								pnlChart.repaint();
+							}
+						});
+					} catch (IOException e1) {
+						
+					}
+				} else {
 					textArea.setText(null);
-					textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
-					
-					if(dataSeries.equals("open")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
-					else if(dataSeries.equals("high")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
-					else if(dataSeries.equals("low")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
-					else if(dataSeries.equals("close")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
-					else if(dataSeries.equals("volume")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
-					pnlChart.repaint();
-					
-					
-					comboBox1.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							textArea.setText(null);
-							String dataSeries = (String) comboBox1.getSelectedItem();
-							if(dataSeries.equals("open")) {
-								textArea.append(model.Model.openStr);
-								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
-							}
-							else if(dataSeries.equals("high")) {
-								textArea.append(model.Model.highStr);
-								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
-							}
-							else if(dataSeries.equals("low")) {
-								textArea.append(model.Model.lowStr);
-								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
-							}
-							else if(dataSeries.equals("close")) {
-								textArea.append(model.Model.closeStr);
-								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
-							}
-							else if(dataSeries.equals("volume")) {
-								textArea.append(model.Model.volumeStr);
-								chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
-							}
-							else if(dataSeries.equals("adjusted close")) textArea.append(model.Model.adjustedCloseStr);
-							else if(dataSeries.equals("dividend amount")) textArea.append(model.Model.dividendAmountStr);
-							else if(dataSeries.equals("split coefficient")) textArea.append(model.Model.splitCoefficientStr);
-							pnlChart.repaint();
-						}
-					});
-				} catch (IOException e1) {
-					
+					textArea.append("Enter valid dates");
 				}
 			}
 		});
@@ -242,6 +259,50 @@ public class Window extends JFrame {
 				
 			}
 		});
+		startDate.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				startDate.setText("");
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (!DataManager.isValidDate(startDate.getText())) {
+					startDate.setText("Please enter valid date");
+				}
+			}
+			
+		});
+		endDate.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				endDate.setText("");
+				
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				if (!DataManager.isValidDate(startDate.getText())) {
+					endDate.setText("Please enter valid date");				
+				}
+			}
+		});
+		
+		
+	}
+	
+	
+	@Override
+	public void focusGained(FocusEvent e) {
+		System.out.println("focusGained");
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		System.out.println("focusLost");
+		
 	}
 	
 

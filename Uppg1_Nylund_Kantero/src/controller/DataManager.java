@@ -116,7 +116,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 				model.Model.openStr += "Date: " + key + ": " + value + "\n";
 				model.Model.openGraph.add(Double.valueOf(value));
 			}
@@ -127,17 +127,18 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 				model.Model.highStr += "Date: " + key + ": " + value + "\n";
 				model.Model.highGraph.add(Double.valueOf(value));
 			}
 		}
+		
 		for(Map.Entry<String,String> entry : lowMap.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 				model.Model.lowStr += "Date: " + key + ": " + value + "\n";
 				model.Model.lowGraph.add(Double.valueOf(value));
 			}
@@ -147,7 +148,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 				model.Model.closeStr += "Date: " + key + ": " + value + "\n";
 				model.Model.closeGraph.add(Double.valueOf(value));
 			}
@@ -157,7 +158,7 @@ public class DataManager {
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
-			if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 				model.Model.volumeStr += "Date: " + key + ": " + value + "\n";
 				model.Model.volumeGraph.add(Double.valueOf(value));
 			}
@@ -168,7 +169,7 @@ public class DataManager {
 				String value = entry.getValue();
 				int a = key.compareTo(sd);
 				int b = key.compareTo(ed);
-				if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+				if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 					model.Model.adjustedCloseStr += "Date: " + key + ": " + value + "\n";
 				}
 			}
@@ -177,7 +178,7 @@ public class DataManager {
 				String value = entry.getValue();
 				int a = key.compareTo(sd);
 				int b = key.compareTo(ed);
-				if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+				if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 					model.Model.dividendAmountStr += "Date: " + key + ": " + value + "\n";
 				}
 			}
@@ -187,7 +188,7 @@ public class DataManager {
 					String value = entry.getValue();
 					int a = key.compareTo(sd);
 					int b = key.compareTo(ed);
-					if ( a >= 0 && b <= 0) { //om datumet är mellan start date och end date
+					if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
 						model.Model.splitCoefficientStr += "Date: " + key + ": " + value + "\n";
 					}
 				}
@@ -265,9 +266,11 @@ public class DataManager {
 		for (int i = 0; i < timeSeriesParts.length; i++) {
 			Model.timeSeriesChoices[i] = timeSeriesParts[i];
 		}
-		for (int i = 0; i < symbolParts.length; i++) {
-			Model.symbolChoices[i] = symbolParts[i];
+		Model.symbolChoices[0] = "null";
+		for (int i = 1; i < symbolParts.length+1; i++) {
+			Model.symbolChoices[i] = symbolParts[i-1];
 		}
+
 		for (int i = 0; i < timeIntervalParts.length; i++) {
 			Model.timeIntervalChoices[i] = timeIntervalParts[i];
 		}
@@ -279,6 +282,7 @@ public class DataManager {
 	public static boolean isValidDate(String date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
+        if (date.equals("")) return true;
         try {
             dateFormat.parse(date.trim());
         } catch (Exception e) {
