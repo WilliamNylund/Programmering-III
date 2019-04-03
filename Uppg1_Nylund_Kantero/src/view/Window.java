@@ -17,7 +17,7 @@ import org.knowm.xchart.*;
 import org.knowm.xchart.style.XYStyler;
 
 public class Window extends JFrame implements FocusListener {
-	
+
 	public Window() {
 		
 		JFrame frame = new JFrame("Stock Analyzer");
@@ -159,7 +159,7 @@ public class Window extends JFrame implements FocusListener {
 
 		XYChart chart = new XYChartBuilder().height(330).width(800).title("Stock graph").build();
 		chart.setXAxisTitle("Stockprices from old to new");
-		XYSeries series = chart.addSeries("Stock", xData, yData);
+		XYSeries series = chart.addSeries("Symbol1", xData, yData);
 		XYStyler styler = chart.getStyler();
 		JPanel pnlChart = new XChartPanel(chart);
 		
@@ -167,8 +167,8 @@ public class Window extends JFrame implements FocusListener {
 		
 		cons.gridheight = 3;
 		cons.gridwidth = 3;
-		cons.gridx = 2; // 2
-		cons.gridy = 11;// 10 
+		cons.gridx = 2;
+		cons.gridy = 11;
 		
 		panel.add(pnlChart, cons);
 	
@@ -195,49 +195,83 @@ public class Window extends JFrame implements FocusListener {
 					try {
 						textArea.setText(null);
 						if (ed.equals("")) ed = "9999";
-						textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
+						if (symbol.equals("null") && symbol2.equals("null")) textArea.append("choose symbol");
+						else {
+							textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
+							textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed));
+
+							//sätt if (bothchoiceschosen)
+
 						
-						if(dataSeries.equals("open")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
-						else if(dataSeries.equals("high")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
-						else if(dataSeries.equals("low")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
-						else if(dataSeries.equals("close")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
-						else if(dataSeries.equals("volume")) chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
-						pnlChart.repaint();
-						
-						
-						comboBox1.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent e) {
-								textArea.setText(null);
-								String dataSeries = (String) comboBox1.getSelectedItem();
-								if(dataSeries.equals("open")) {
-									textArea.append(model.Model.openStr);
-									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.openGraph, null);
-								}
-								else if(dataSeries.equals("high")) {
-									textArea.append(model.Model.highStr);
-									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.highGraph, null);
-								}
-								else if(dataSeries.equals("low")) {
-									textArea.append(model.Model.lowStr);
-									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.lowGraph, null);
-								}
-								else if(dataSeries.equals("close")) {
-									textArea.append(model.Model.closeStr);
-									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.closeGraph, null);
-								}
-								else if(dataSeries.equals("volume")) {
-									textArea.append(model.Model.volumeStr);
-									chart.updateXYSeries("Stock", model.Model.xlist, model.Model.volumeGraph, null);
-								}
-								else if(dataSeries.equals("adjusted close")) textArea.append(model.Model.adjustedCloseStr);
-								else if(dataSeries.equals("dividend amount")) textArea.append(model.Model.dividendAmountStr);
-								else if(dataSeries.equals("split coefficient")) textArea.append(model.Model.splitCoefficientStr);
-								pnlChart.repaint();
+							if(dataSeries.equals("open")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+							else if(dataSeries.equals("high")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+							else if(dataSeries.equals("low")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+							else if(dataSeries.equals("close")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+							else if(dataSeries.equals("volume")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+							else if(dataSeries.equals("adjusted close")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
+							else if(dataSeries.equals("dividend amount")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+							else if(dataSeries.equals("split coefficient")) {
+								if (timeSeries.equals("TIME_SERIES_DAILY_ADJUSTED")) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
+								} else chart.updateXYSeries("Symbol1", xData, yData, null);
 							}
-						});
-					} catch (IOException e1) {
+							pnlChart.repaint();
+					
 						
-					}
+							comboBox1.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									textArea.setText(null);
+									String dataSeries = (String) comboBox1.getSelectedItem();
+									if(dataSeries.equals("open")) {
+										textArea.append(model.Model.openStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+									}
+									else if(dataSeries.equals("high")) {
+										textArea.append(model.Model.highStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+									}
+									else if(dataSeries.equals("low")) {
+										textArea.append(model.Model.lowStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+									}
+									else if(dataSeries.equals("close")) {
+										textArea.append(model.Model.closeStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+									}
+									else if(dataSeries.equals("volume")) {
+										textArea.append(model.Model.volumeStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+									}
+									else if(dataSeries.equals("adjusted close")) {
+										System.out.println(model.Model.xlist.size() + "size" + model.Model.adjustedCloseGraph.size());
+										textArea.append(model.Model.adjustedCloseStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
+	
+									}
+									else if(dataSeries.equals("dividend amount")) {
+										textArea.append(model.Model.dividendAmountStr);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+									}
+									else if(dataSeries.equals("split coefficient")) {
+										textArea.append(model.Model.splitCoefficientStr);
+										if (timeSeries.equals("TIME_SERIES_DAILY_ADJUSTED")) {
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
+										} else 	chart.updateXYSeries("Symbol1", xData, yData, null);
+									}
+									
+									pnlChart.repaint();
+								
+								}
+							});
+						}
+					} 
+					catch (NoSuchElementException e2) {
+						textArea.append("Data only available from recent past");
+					} catch (IllegalArgumentException e3) {
+						textArea.append(timeSeries + " does not contain " + dataSeries);
+					} catch (IOException e1) {
+		
+					} 
 				} else {
 					textArea.setText(null);
 					textArea.append("Enter valid dates");
