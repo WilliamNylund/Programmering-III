@@ -198,10 +198,12 @@ public class Window extends JFrame implements FocusListener {
 						if (symbol.equals("null") && symbol2.equals("null")) textArea.append("choose symbol");
 						else {
 							textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
-							textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed));
+							//textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed));
 
 							//sätt if (bothchoiceschosen)
-
+							//datamanager skapar listor med alla värden 
+							//här kommer en appendString metod som returnerar rätt värden, måst änder i comboboxactionlistener å 
+							
 						
 							if(dataSeries.equals("open")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
 							else if(dataSeries.equals("high")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
