@@ -156,10 +156,13 @@ public class Window extends JFrame implements FocusListener {
 		
 		double[] xData = new double[] {1};
 		double[] yData = new double[] {1};
+		double[] x1Data = new double[] {2};
+		double[] y1Data = new double[] {2};
 
 		XYChart chart = new XYChartBuilder().height(330).width(800).title("Stock graph").build();
 		chart.setXAxisTitle("Stockprices from old to new");
-		XYSeries series = chart.addSeries("Symbol1", xData, yData);
+		XYSeries series = chart.addSeries("Symbol1", xData, yData);		
+		
 		XYStyler styler = chart.getStyler();
 		JPanel pnlChart = new XChartPanel(chart);
 		
@@ -191,21 +194,35 @@ public class Window extends JFrame implements FocusListener {
 					String apiKey = apiEdit.getText();
 					String sd = startDate.getText();
 					String ed = endDate.getText();
-					
+					controller.DataManager.reset();
 					try {
 						textArea.setText(null);
 						if (ed.equals("")) ed = "9999";
 						if (symbol.equals("null") && symbol2.equals("null")) textArea.append("choose symbol");
 						else {
-							textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed));
-							//textArea.append(controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed));
+							if (bothSymbolsChosen(symbol, symbol2)) {
+								controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed);
+								controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed);
+								textArea.append(controller.DataManager.makeStrings(dataSeries, symbol, symbol2));
 
-							//sätt if (bothchoiceschosen)
-							//datamanager skapar listor med alla värden 
-							//här kommer en appendString metod som returnerar rätt värden, måst änder i comboboxactionlistener å 
+							} else {
+								controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed);
+								textArea.append(controller.DataManager.makeString(dataSeries));
+							}
+					
 							
+							// copy paste allt från open
 						
-							if(dataSeries.equals("open")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+							if(dataSeries.equals("open")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.openGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+
+								}
+							}
 							else if(dataSeries.equals("high")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
 							else if(dataSeries.equals("low")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
 							else if(dataSeries.equals("close")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
@@ -218,7 +235,7 @@ public class Window extends JFrame implements FocusListener {
 								} else chart.updateXYSeries("Symbol1", xData, yData, null);
 							}
 							pnlChart.repaint();
-					
+							pnlChart.validate();
 						
 							comboBox1.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
@@ -245,7 +262,6 @@ public class Window extends JFrame implements FocusListener {
 										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
 									}
 									else if(dataSeries.equals("adjusted close")) {
-										System.out.println(model.Model.xlist.size() + "size" + model.Model.adjustedCloseGraph.size());
 										textArea.append(model.Model.adjustedCloseStr);
 										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
 	
@@ -269,7 +285,8 @@ public class Window extends JFrame implements FocusListener {
 					} 
 					catch (NoSuchElementException e2) {
 						textArea.append("Data only available from recent past");
-					} catch (IllegalArgumentException e3) {
+					} 
+					catch (IllegalArgumentException e3) {
 						textArea.append(timeSeries + " does not contain " + dataSeries);
 					} catch (IOException e1) {
 		
@@ -340,7 +357,11 @@ public class Window extends JFrame implements FocusListener {
 		System.out.println("focusLost");
 		
 	}
-	
-
+	public boolean bothSymbolsChosen(String Symbol, String Symbol2) {
+		if (!Symbol.equals("null") && !Symbol2.equals("null")){
+			return true;
+		} else return false;
+		
+	}
 	
 }

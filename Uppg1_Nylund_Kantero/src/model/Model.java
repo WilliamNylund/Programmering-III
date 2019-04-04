@@ -15,6 +15,8 @@ public class Model {
 	
 	
 	public static ArrayList openGraph = new ArrayList<Double>();
+	public static ArrayList openGraph2 = new ArrayList<Double>();
+
 	public static ArrayList highGraph = new ArrayList<Double>();
 	public static ArrayList lowGraph = new ArrayList<Double>();
 	public static ArrayList closeGraph = new ArrayList<Double>();
@@ -22,6 +24,8 @@ public class Model {
 	public static ArrayList adjustedCloseGraph = new ArrayList<Double>();
 	public static ArrayList dividendAmountGraph = new ArrayList<Double>();
 	public static ArrayList splitCoefficientGraph = new ArrayList<Double>();
+	
+	
 
 	public static ArrayList xlist = new ArrayList<Double>(); //Denna lista består av 0, 1, 2...=> open.size() för att få gjort grafen med koordinater
 	
