@@ -184,6 +184,8 @@ public class Window extends JFrame implements FocusListener {
 		button.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				controller.DataManager.reset();
+				chart.removeSeries("Symbol2"); //sattt till
 				if (DataManager.isValidDate(startDate.getText()) && DataManager.isValidDate(endDate.getText())) {
 					String dataSeries = (String) comboBox1.getSelectedItem();
 					String timeSeries = (String) comboBox2.getSelectedItem();
@@ -194,7 +196,6 @@ public class Window extends JFrame implements FocusListener {
 					String apiKey = apiEdit.getText();
 					String sd = startDate.getText();
 					String ed = endDate.getText();
-					controller.DataManager.reset();
 					try {
 						textArea.setText(null);
 						if (ed.equals("")) ed = "9999";
@@ -209,10 +210,12 @@ public class Window extends JFrame implements FocusListener {
 								controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed);
 								textArea.append(controller.DataManager.makeString(dataSeries));
 							}
-					
-							
+							//compact funkar men int full
+							//probleem då int listorna e lika stor av två symboler
+							//test aapl + google = error pga ojämna tal
+							//aapl å A går men blir fel värden
 							// copy paste allt från open
-						
+							
 							if(dataSeries.equals("open")) {
 								if (bothSymbolsChosen(symbol, symbol2)) {
 									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
@@ -288,9 +291,13 @@ public class Window extends JFrame implements FocusListener {
 					} 
 					catch (IllegalArgumentException e3) {
 						textArea.append(timeSeries + " does not contain " + dataSeries);
-					} catch (IOException e1) {
-		
 					} 
+					catch (JSONException e4) {
+						textArea.append("Please don't spam queries .");
+					}
+					catch (IOException e1) {
+		
+					}
 				} else {
 					textArea.setText(null);
 					textArea.append("Enter valid dates");

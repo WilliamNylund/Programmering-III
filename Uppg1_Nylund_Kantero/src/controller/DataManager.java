@@ -110,9 +110,8 @@ public class DataManager {
 			volumeMap.put(allDates.get(i).toString(), volume.get(i).toString());
 			}
 		}
-		
+		System.out.println("open size " + open.size());
 		for(Map.Entry<String,String> entry : openMap.entrySet()) {
-			
 			String key = entry.getKey();
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
@@ -254,10 +253,13 @@ public class DataManager {
 		model.Model.dividendAmountGraph.clear();
 		model.Model.splitCoefficientGraph.clear();
 		model.Model.xlist.clear();
-		model.Model.open.clear();
+		model.Model.date.clear();
+		model.Model.open.clear(); //ey
+		
 	}
 	private static void reverseLists() {
 		Collections.reverse(model.Model.openGraph);
+		Collections.reverse(model.Model.openGraph2); //lägg alllihop
 		Collections.reverse(model.Model.highGraph);
 		Collections.reverse(model.Model.lowGraph);
 		Collections.reverse(model.Model.closeGraph);
@@ -309,20 +311,24 @@ public class DataManager {
 	public static String makeStrings(String dataSeries, String symbol1, String symbol2) {
 		ArrayList list1 = new ArrayList<String>();
 		ArrayList list2 = new ArrayList<String>();
-
+		System.out.println(model.Model.open.size());
+		
 		for (int i = 0; i < model.Model.open.size(); i++) {
-			if (i < (model.Model.open.size()+1) / 2) {
+			if (i < (model.Model.open.size()+1)/2 ) {
 				list1.add(model.Model.open.get(i));
 				model.Model.openGraph.add(Double.valueOf((String) model.Model.open.get(i)));
-				
 			} else {
 				list2.add(model.Model.open.get(i));
 				model.Model.openGraph2.add(Double.valueOf((String) model.Model.open.get(i)));
-
 			}
 			
 		}
-		for (int i = 0; i < list1.size(); i++) {
+		System.out.println("opengraph1 " + model.Model.openGraph.size());
+		System.out.println("opengraph2 " + model.Model.openGraph2.size());
+		System.out.println("list 2 " + list2.size()); //list 2 tomm?
+		System.out.println("list 1 "+list1.size());
+		System.out.println("date size " + model.Model.date.size());
+		for (int i = 0; i < list1.size(); i++) { 
 			model.Model.openStr += model.Model.date.get(i) + ": " + symbol1 + " " + list1.get(i) + "      " + symbol2 + " "+ list2.get(i) + "\n";
 		}
 		
