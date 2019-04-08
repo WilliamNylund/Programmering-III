@@ -209,14 +209,6 @@ public class DataManager {
 
 		reverseLists(); //svänger om ordningen på listan med värden till graferna för att gå från äldst => nyast
 	
-/*		if(dataSeries.equals("open")) return model.Model.openStr;
-		else if(dataSeries.equals("high")) return model.Model.highStr;
-		else if(dataSeries.equals("low")) return model.Model.lowStr;
-		else if(dataSeries.equals("close")) return model.Model.closeStr;
-		else if(dataSeries.equals("split coefficient")) return model.Model.splitCoefficientStr;
-		else if(dataSeries.equals("dividend amount")) return model.Model.dividendAmountStr;
-		else if(dataSeries.equals("adjusted close")) return model.Model.adjustedCloseStr;
-		else return model.Model.volumeStr;*/
 		
 	}
 	
@@ -244,14 +236,20 @@ public class DataManager {
 		model.Model.splitCoefficientStr = "===Showing data for 8. split coefficient===\n";
 		model.Model.openGraph.clear();
 		model.Model.openGraph2.clear();
-
 		model.Model.highGraph.clear(); //ändra allihop
+		model.Model.highGraph2.clear();
 		model.Model.lowGraph.clear();
+		model.Model.lowGraph2.clear();
 		model.Model.closeGraph.clear();
+		model.Model.closeGraph2.clear();
 		model.Model.volumeGraph.clear();
+		model.Model.volumeGraph2.clear();
 		model.Model.adjustedCloseGraph.clear();
+		model.Model.adjustedCloseGraph2.clear();
 		model.Model.dividendAmountGraph.clear();
+		model.Model.dividendAmountGraph2.clear();
 		model.Model.splitCoefficientGraph.clear();
+		model.Model.splitCoefficientGraph2.clear();
 		model.Model.xlist.clear();
 		model.Model.date.clear();
 		model.Model.open.clear(); //ey
@@ -261,9 +259,20 @@ public class DataManager {
 		Collections.reverse(model.Model.openGraph);
 		Collections.reverse(model.Model.openGraph2); //lägg alllihop
 		Collections.reverse(model.Model.highGraph);
+		Collections.reverse(model.Model.highGraph2);
 		Collections.reverse(model.Model.lowGraph);
+		Collections.reverse(model.Model.lowGraph2);
 		Collections.reverse(model.Model.closeGraph);
+		Collections.reverse(model.Model.closeGraph2);
 		Collections.reverse(model.Model.volumeGraph);
+		Collections.reverse(model.Model.volumeGraph2);
+		Collections.reverse(model.Model.adjustedCloseGraph);
+		Collections.reverse(model.Model.adjustedCloseGraph2);
+		Collections.reverse(model.Model.dividendAmountGraph);
+		Collections.reverse(model.Model.dividendAmountGraph2);
+		Collections.reverse(model.Model.splitCoefficientGraph);
+		Collections.reverse(model.Model.splitCoefficientGraph2);
+
 	}
 	public static void getChoices() throws FileNotFoundException {
 		
@@ -312,7 +321,6 @@ public class DataManager {
 		ArrayList list1 = new ArrayList<String>();
 		ArrayList list2 = new ArrayList<String>();
 		System.out.println(model.Model.open.size());
-		
 		for (int i = 0; i < model.Model.open.size(); i++) {
 			if (i < (model.Model.open.size()+1)/2 ) {
 				list1.add(model.Model.open.get(i));

@@ -207,17 +207,23 @@ public class Window extends JFrame implements FocusListener {
 								textArea.append(controller.DataManager.makeStrings(dataSeries, symbol, symbol2));
 
 							} else {
-								controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed);
-								textArea.append(controller.DataManager.makeString(dataSeries));
+								if (symbol.equals("null")) {
+									controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed);
+									textArea.append(controller.DataManager.makeString(dataSeries));
+								} else {
+									controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed);
+									textArea.append(controller.DataManager.makeString(dataSeries));
+								}
 							}
 							//compact funkar men int full
 							//probleem då int listorna e lika stor av två symboler
 							//test aapl + google = error pga ojämna tal
 							//aapl å A går men blir fel värden
-							// copy paste allt från open
-							
+							//fix dataManager fö alla dataseries
 							if(dataSeries.equals("open")) {
 								if (bothSymbolsChosen(symbol, symbol2)) {
+									//Måst kanske lägg till chart.removeSeries("Symbol2");
+
 									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
 									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.openGraph2);
 								} else {
@@ -226,27 +232,94 @@ public class Window extends JFrame implements FocusListener {
 
 								}
 							}
-							else if(dataSeries.equals("high")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
-							else if(dataSeries.equals("low")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
-							else if(dataSeries.equals("close")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
-							else if(dataSeries.equals("volume")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
-							else if(dataSeries.equals("adjusted close")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
-							else if(dataSeries.equals("dividend amount")) chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+							else if(dataSeries.equals("high")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.highGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+
+								}
+							}
+							else if(dataSeries.equals("low")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.lowGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+
+								}
+							}
+							else if(dataSeries.equals("close")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.closeGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+
+								}
+							}
+							else if(dataSeries.equals("volume")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.volumeGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+
+								}
+							}
+							else if(dataSeries.equals("adjusted close")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.adjustedCloseGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
+
+								}
+							}
+							else if(dataSeries.equals("dividend amount")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.dividendAmountGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+
+								}
+							}
 							else if(dataSeries.equals("split coefficient")) {
-								if (timeSeries.equals("TIME_SERIES_DAILY_ADJUSTED")) {
+								if (bothSymbolsChosen(symbol, symbol2)) {
 									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
-								} else chart.updateXYSeries("Symbol1", xData, yData, null);
+									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.splitCoefficientGraph2);
+								} else {
+									chart.removeSeries("Symbol2");
+									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
+
+								}
 							}
 							pnlChart.repaint();
 							pnlChart.validate();
 						
 							comboBox1.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
+								try {
 									textArea.setText(null);
 									String dataSeries = (String) comboBox1.getSelectedItem();
 									if(dataSeries.equals("open")) {
 										textArea.append(model.Model.openStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.openGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
+										}
 									}
 									else if(dataSeries.equals("high")) {
 										textArea.append(model.Model.highStr);
@@ -266,34 +339,32 @@ public class Window extends JFrame implements FocusListener {
 									}
 									else if(dataSeries.equals("adjusted close")) {
 										textArea.append(model.Model.adjustedCloseStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
-	
-									}
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);										}
 									else if(dataSeries.equals("dividend amount")) {
 										textArea.append(model.Model.dividendAmountStr);
 										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
 									}
 									else if(dataSeries.equals("split coefficient")) {
 										textArea.append(model.Model.splitCoefficientStr);
-										if (timeSeries.equals("TIME_SERIES_DAILY_ADJUSTED")) {
-											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
-										} else 	chart.updateXYSeries("Symbol1", xData, yData, null);
+										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);		
 									}
 									
 									pnlChart.repaint();
-								
+								} catch (IllegalArgumentException e3) {
+									textArea.append(timeSeries + " does not contain " + dataSeries);
+								}
 								}
 							});
 						}
+					}
+					catch (IllegalArgumentException e3) {
+						textArea.append(timeSeries + " does not contain " + dataSeries);
 					} 
 					catch (NoSuchElementException e2) {
 						textArea.append("Data only available from recent past");
 					} 
-					catch (IllegalArgumentException e3) {
-						textArea.append(timeSeries + " does not contain " + dataSeries);
-					} 
 					catch (JSONException e4) {
-						textArea.append("Please don't spam queries .");
+						textArea.append("Please don't spam queries.");
 					}
 					catch (IOException e1) {
 		

@@ -16,14 +16,20 @@ public class Model {
 	
 	public static ArrayList openGraph = new ArrayList<Double>();
 	public static ArrayList openGraph2 = new ArrayList<Double>();
-
 	public static ArrayList highGraph = new ArrayList<Double>();
+	public static ArrayList highGraph2 = new ArrayList<Double>();
 	public static ArrayList lowGraph = new ArrayList<Double>();
+	public static ArrayList lowGraph2 = new ArrayList<Double>();
 	public static ArrayList closeGraph = new ArrayList<Double>();
+	public static ArrayList closeGraph2 = new ArrayList<Double>();
 	public static ArrayList volumeGraph = new ArrayList<Double>();
+	public static ArrayList volumeGraph2 = new ArrayList<Double>();
 	public static ArrayList adjustedCloseGraph = new ArrayList<Double>();
+	public static ArrayList adjustedCloseGraph2 = new ArrayList<Double>();
 	public static ArrayList dividendAmountGraph = new ArrayList<Double>();
+	public static ArrayList dividendAmountGraph2 = new ArrayList<Double>();
 	public static ArrayList splitCoefficientGraph = new ArrayList<Double>();
+	public static ArrayList splitCoefficientGraph2 = new ArrayList<Double>();
 	
 	
 
@@ -36,6 +42,14 @@ public class Model {
 	public static String apiKey = null;
 	
 	public static ArrayList open = new ArrayList<String>();
+	public static ArrayList high = new ArrayList<String>();
+	public static ArrayList low = new ArrayList<String>();
+	public static ArrayList close = new ArrayList<String>();
+	public static ArrayList volume = new ArrayList<String>();
+	public static ArrayList adjustedClose = new ArrayList<String>();
+	public static ArrayList dividendAmount = new ArrayList<String>();
+	public static ArrayList splitCoefficient = new ArrayList<String>();
+
 	public static ArrayList date = new ArrayList<String>();
 	
 }
