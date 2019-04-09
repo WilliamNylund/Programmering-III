@@ -31,8 +31,6 @@ public class Model {
 	public static ArrayList splitCoefficientGraph = new ArrayList<Double>();
 	public static ArrayList splitCoefficientGraph2 = new ArrayList<Double>();
 	
-	
-
 	public static ArrayList xlist = new ArrayList<Double>(); //Denna lista består av 0, 1, 2...=> open.size() för att få gjort grafen med koordinater
 	
 	public static String[] symbolChoices = new String[16];

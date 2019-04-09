@@ -22,7 +22,6 @@ public class DataManager {
 		String url = "https://www.alphavantage.co/query?function=" + ts + "&symbol=" + sy + "&interval="+ ti +"&outputsize="+ os +"&apikey=" + ak;
 		String date = null;
 		String ds = null;
-		System.out.println(url);
 		ArrayList open = new ArrayList();
 		ArrayList high = new ArrayList();
 		ArrayList low = new ArrayList();
@@ -110,17 +109,15 @@ public class DataManager {
 			volumeMap.put(allDates.get(i).toString(), volume.get(i).toString());
 			}
 		}
-		System.out.println("open size " + open.size());
+		
 		for(Map.Entry<String,String> entry : openMap.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
 			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-				//model.Model.openStr += "Date: " + key + ": " + value + "\n";
 				model.Model.date.add(key);
 				model.Model.open.add(value);
-				//model.Model.openGraph.add(Double.valueOf(value));
 			}
 		}
 		
@@ -130,8 +127,7 @@ public class DataManager {
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
 			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-				model.Model.highStr += "Date: " + key + ": " + value + "\n";
-				model.Model.highGraph.add(Double.valueOf(value));
+				model.Model.high.add(value);
 				
 			}
 		}
@@ -142,8 +138,7 @@ public class DataManager {
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
 			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-				model.Model.lowStr += "Date: " + key + ": " + value + "\n";
-				model.Model.lowGraph.add(Double.valueOf(value));
+				model.Model.low.add(value);
 			}
 		}
 		
@@ -153,8 +148,7 @@ public class DataManager {
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
 			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-				model.Model.closeStr += "Date: " + key + ": " + value + "\n";
-				model.Model.closeGraph.add(Double.valueOf(value));
+				model.Model.close.add(value);
 			}
 		}
 		for(Map.Entry<String,String> entry : volumeMap.entrySet()) {
@@ -163,8 +157,7 @@ public class DataManager {
 			int a = key.compareTo(sd);
 			int b = key.compareTo(ed);
 			if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-				model.Model.volumeStr += "Date: " + key + ": " + value + "\n";
-				model.Model.volumeGraph.add(Double.valueOf(value));
+				model.Model.volume.add(value);
 			}
 		}
 		if (ts.equals("TIME_SERIES_DAILY_ADJUSTED") || ts.equals("TIME_SERIES_WEEKLY_ADJUSTED") || ts.equals("TIME_SERIES_MONTHLY_ADJUSTED")) {
@@ -174,8 +167,7 @@ public class DataManager {
 				int a = key.compareTo(sd);
 				int b = key.compareTo(ed);
 				if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-					model.Model.adjustedCloseStr += "Date: " + key + ": " + value + "\n";
-					model.Model.adjustedCloseGraph.add(Double.valueOf(value));
+					model.Model.adjustedClose.add(value);
 
 				}
 			}
@@ -185,8 +177,7 @@ public class DataManager {
 				int a = key.compareTo(sd);
 				int b = key.compareTo(ed);
 				if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-					model.Model.dividendAmountStr += "Date: " + key + ": " + value + "\n";
-					model.Model.dividendAmountGraph.add(Double.valueOf(value));
+					model.Model.dividendAmount.add(value);
 
 				}
 			}
@@ -197,8 +188,7 @@ public class DataManager {
 					int a = key.compareTo(sd);
 					int b = key.compareTo(ed);
 					if ( a >= 0 && b <= 0 || sd.equals(ed)) { //om datumet är mellan start date och end date
-						model.Model.splitCoefficientStr += "Date: " + key + ": " + value + "\n";
-						model.Model.splitCoefficientGraph.add(Double.valueOf(value));
+						model.Model.splitCoefficient.add(value);
 
 					} 
 				}
@@ -236,7 +226,7 @@ public class DataManager {
 		model.Model.splitCoefficientStr = "===Showing data for 8. split coefficient===\n";
 		model.Model.openGraph.clear();
 		model.Model.openGraph2.clear();
-		model.Model.highGraph.clear(); //ändra allihop
+		model.Model.highGraph.clear();
 		model.Model.highGraph2.clear();
 		model.Model.lowGraph.clear();
 		model.Model.lowGraph2.clear();
@@ -252,12 +242,12 @@ public class DataManager {
 		model.Model.splitCoefficientGraph2.clear();
 		model.Model.xlist.clear();
 		model.Model.date.clear();
-		model.Model.open.clear(); //ey
+		model.Model.open.clear(); 
 		
 	}
 	private static void reverseLists() {
 		Collections.reverse(model.Model.openGraph);
-		Collections.reverse(model.Model.openGraph2); //lägg alllihop
+		Collections.reverse(model.Model.openGraph2);
 		Collections.reverse(model.Model.highGraph);
 		Collections.reverse(model.Model.highGraph2);
 		Collections.reverse(model.Model.lowGraph);
@@ -317,27 +307,119 @@ public class DataManager {
         return true;
     }
 	
+	public static String calculatePear() { 
+		//formeln tagen från https://study.com/academy/lesson/pearson-correlation-coefficient-formula-example-significance.html
+		//pearsons correlation coefficient är beräknad enligt close values.
+		
+		double symbolSum1 = 0; //summan av alla symbol1 värden
+		double symbolSum2 = 0 ; //summan av alla symbol2 värden
+		double symbolSum12 = 0; //summan av alla symbolSum1*symbolSum2
+		double symbolSum11 = 0; //summan av alla symbolSum1*symbolSum1
+		double symbolSum22 = 0; //summan av alla symbolSum2*symbolSum2
+		int n = model.Model.closeGraph.size(); 
+		for (int i = 0; i < n; i++) {
+			symbolSum1 += (double) model.Model.closeGraph.get(i);
+			symbolSum2 += (double) model.Model.closeGraph2.get(i);
+			symbolSum12 += ((double) model.Model.closeGraph.get(i)) * ((double) model.Model.closeGraph2.get(i));
+			symbolSum11 += ((double) model.Model.closeGraph.get(i)) * ((double) model.Model.closeGraph.get(i));
+			symbolSum22 += ((double) model.Model.closeGraph2.get(i)) * ((double) model.Model.closeGraph2.get(i));
+		}
+		
+		double numerator = (n*symbolSum12) - (symbolSum1*symbolSum2);
+		double denominator = Math.sqrt(((n-1)*symbolSum11)*((n-1)*symbolSum22));
+		double pear = numerator / denominator;
+		return Double.toString(pear);
+	}
+	
+	
+	//Don't go deeper
+	
 	public static String makeStrings(String dataSeries, String symbol1, String symbol2) {
-		ArrayList list1 = new ArrayList<String>();
-		ArrayList list2 = new ArrayList<String>();
-		System.out.println(model.Model.open.size());
+		ArrayList openList1 = new ArrayList<String>();
+		ArrayList openList2 = new ArrayList<String>();
+		ArrayList highList1 = new ArrayList<String>();
+		ArrayList highList2 = new ArrayList<String>();
+		ArrayList lowList1 = new ArrayList<String>();
+		ArrayList lowList2 = new ArrayList<String>();
+		ArrayList closeList1 = new ArrayList<String>();
+		ArrayList closeList2 = new ArrayList<String>();
+		ArrayList volumeList1 = new ArrayList<String>();
+		ArrayList volumeList2 = new ArrayList<String>();
+		ArrayList adjustedCloseList1 = new ArrayList<String>();
+		ArrayList adjustedCloseList2 = new ArrayList<String>();
+		ArrayList dividendAmountList1 = new ArrayList<String>();
+		ArrayList dividendAmountList2 = new ArrayList<String>();
+		ArrayList splitCoefficientList1 = new ArrayList<String>();
+		ArrayList splitCoefficientList2 = new ArrayList<String>();
+		
 		for (int i = 0; i < model.Model.open.size(); i++) {
 			if (i < (model.Model.open.size()+1)/2 ) {
-				list1.add(model.Model.open.get(i));
+				openList1.add(model.Model.open.get(i));
 				model.Model.openGraph.add(Double.valueOf((String) model.Model.open.get(i)));
-			} else {
-				list2.add(model.Model.open.get(i));
-				model.Model.openGraph2.add(Double.valueOf((String) model.Model.open.get(i)));
-			}
+				
+				highList1.add(model.Model.high.get(i));
+				model.Model.highGraph.add(Double.valueOf((String) model.Model.high.get(i)));
+				
+				lowList1.add(model.Model.low.get(i));
+				model.Model.lowGraph.add(Double.valueOf((String) model.Model.low.get(i)));
+				
+				closeList1.add(model.Model.close.get(i));
+				model.Model.closeGraph.add(Double.valueOf((String) model.Model.close.get(i)));
+				
+				volumeList1.add(model.Model.volume.get(i));
+				model.Model.volumeGraph.add(Double.valueOf((String) model.Model.volume.get(i)));
+				
+				try {
+				adjustedCloseList1.add(model.Model.adjustedClose.get(i));
+				model.Model.adjustedCloseGraph.add(Double.valueOf((String) model.Model.adjustedClose.get(i)));
+				
+				dividendAmountList1.add(model.Model.dividendAmount.get(i));
+				model.Model.dividendAmountGraph.add(Double.valueOf((String) model.Model.dividendAmount.get(i)));
+				
+				splitCoefficientList1.add(model.Model.splitCoefficient.get(i));
+				model.Model.splitCoefficientGraph.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
+				} catch (IndexOutOfBoundsException e1) {}
 			
+			} else {
+				openList2.add(model.Model.open.get(i));
+				model.Model.openGraph2.add(Double.valueOf((String) model.Model.open.get(i)));
+				
+				highList2.add(model.Model.high.get(i));
+				model.Model.highGraph2.add(Double.valueOf((String) model.Model.high.get(i)));
+				
+				lowList2.add(model.Model.low.get(i));
+				model.Model.lowGraph2.add(Double.valueOf((String) model.Model.low.get(i)));
+				
+				closeList2.add(model.Model.close.get(i));
+				model.Model.closeGraph2.add(Double.valueOf((String) model.Model.close.get(i)));
+				
+				volumeList2.add(model.Model.volume.get(i));
+				model.Model.volumeGraph2.add(Double.valueOf((String) model.Model.volume.get(i)));
+				
+				try {
+				adjustedCloseList2.add(model.Model.adjustedClose.get(i));
+				model.Model.adjustedCloseGraph2.add(Double.valueOf((String) model.Model.adjustedClose.get(i)));
+				
+				dividendAmountList2.add(model.Model.dividendAmount.get(i));
+				model.Model.dividendAmountGraph2.add(Double.valueOf((String) model.Model.dividendAmount.get(i)));
+				
+				splitCoefficientList2.add(model.Model.splitCoefficient.get(i));
+				model.Model.splitCoefficientGraph2.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
+				} catch (IndexOutOfBoundsException e1) {}
+			}
 		}
-		System.out.println("opengraph1 " + model.Model.openGraph.size());
-		System.out.println("opengraph2 " + model.Model.openGraph2.size());
-		System.out.println("list 2 " + list2.size()); //list 2 tomm?
-		System.out.println("list 1 "+list1.size());
-		System.out.println("date size " + model.Model.date.size());
-		for (int i = 0; i < list1.size(); i++) { 
-			model.Model.openStr += model.Model.date.get(i) + ": " + symbol1 + " " + list1.get(i) + "      " + symbol2 + " "+ list2.get(i) + "\n";
+
+		for (int i = 0; i < openList1.size(); i++) { 
+			model.Model.openStr += model.Model.date.get(i) + ": " + symbol1 + " " + openList1.get(i) + "      " + symbol2 + " "+ openList2.get(i) + "\n";
+			model.Model.highStr += model.Model.date.get(i) + ": " + symbol1 + " " + highList1.get(i) + "      " + symbol2 + " "+ highList2.get(i) + "\n";
+			model.Model.lowStr += model.Model.date.get(i) + ": " + symbol1 + " " + lowList1.get(i) + "      " + symbol2 + " "+ lowList2.get(i) + "\n";
+			model.Model.closeStr += model.Model.date.get(i) + ": " + symbol1 + " " + closeList1.get(i) + "      " + symbol2 + " "+ closeList2.get(i) + "\n";
+			model.Model.volumeStr += model.Model.date.get(i) + ": " + symbol1 + " " + volumeList1.get(i) + "      " + symbol2 + " "+ volumeList2.get(i) + "\n";
+			try {
+			model.Model.adjustedCloseStr += model.Model.date.get(i) + ": " + symbol1 + " " + adjustedCloseList1.get(i) + "      " + symbol2 + " "+ adjustedCloseList2.get(i) + "\n";
+			model.Model.dividendAmountStr += model.Model.date.get(i) + ": " + symbol1 + " " + dividendAmountList1.get(i) + "      " + symbol2 + " "+ dividendAmountList2.get(i) + "\n";
+			model.Model.splitCoefficientStr += model.Model.date.get(i) + ": " + symbol1 + " " + splitCoefficientList1.get(i) + "      " + symbol2 + " "+ splitCoefficientList2.get(i) + "\n";
+			} catch (IndexOutOfBoundsException e1) {}
 		}
 		
 		for(int i = 0; i < Model.openGraph.size(); i++) {
@@ -355,10 +437,30 @@ public class DataManager {
 	}
 	
 	public static String makeString(String dataSeries) {
+		
 		for (int i = 0; i < model.Model.open.size(); i++) {
 			model.Model.openStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.open.get(i) + "\n";
 			model.Model.openGraph.add(Double.valueOf((String) model.Model.open.get(i)));
-
+			
+			model.Model.highStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.high.get(i) + "\n";
+			model.Model.highGraph.add(Double.valueOf((String) model.Model.high.get(i)));
+			
+			model.Model.lowStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.low.get(i) + "\n";
+			model.Model.lowGraph.add(Double.valueOf((String) model.Model.low.get(i)));
+			
+			model.Model.closeStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.close.get(i) + "\n";
+			model.Model.closeGraph.add(Double.valueOf((String) model.Model.close.get(i)));
+			
+			try {
+			model.Model.splitCoefficientStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.splitCoefficient.get(i) + "\n";
+			model.Model.splitCoefficientGraph.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
+			
+			model.Model.dividendAmountStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.dividendAmount.get(i) + "\n";
+			model.Model.dividendAmountGraph.add(Double.valueOf((String) model.Model.dividendAmount.get(i)));
+			
+			model.Model.adjustedCloseStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.adjustedClose.get(i) + "\n";
+			model.Model.adjustedCloseGraph.add(Double.valueOf((String) model.Model.adjustedClose.get(i)));
+			} catch (IndexOutOfBoundsException e1) {}
 		}
 		
 		
@@ -375,5 +477,7 @@ public class DataManager {
 		else if(dataSeries.equals("adjusted close")) return model.Model.adjustedCloseStr;
 		else return model.Model.volumeStr;
 	}
+
+	
 	
 }

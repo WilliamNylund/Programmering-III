@@ -77,6 +77,11 @@ public class Window extends JFrame implements FocusListener {
 		cons.gridy = 8;
 		panel.add(endLabel, cons);
 		
+		JButton pearButton = new JButton("Pearson Correlation");
+		cons.gridx = 0;
+		cons.gridy = 10;
+		panel.add(pearButton, cons);
+		
 		try {
 			DataManager.getChoices();
 		} catch (FileNotFoundException e2) {
@@ -126,7 +131,6 @@ public class Window extends JFrame implements FocusListener {
 		cons.gridy = 7;
 		panel.add(startDate, cons);
 		
-
 		
 		JTextField endDate = new JTextField();
 		cons.gridx = 1;
@@ -140,6 +144,14 @@ public class Window extends JFrame implements FocusListener {
 		cons.gridy = 9;
 		panel.add(button, cons);
 		
+		cons.fill = GridBagConstraints.HORIZONTAL;
+		JTextArea pearArea = new JTextArea();
+		pearArea.setEditable(false);
+		pearArea.setLineWrap(true);
+		cons.gridx = 1;
+		cons.gridy = 10;
+		panel.add(pearArea, cons);
+		cons.fill = GridBagConstraints.NONE;
 		
 		JTextArea textArea = new JTextArea(20,30);
 		JScrollPane scrollPane = new JScrollPane(textArea);
@@ -149,7 +161,7 @@ public class Window extends JFrame implements FocusListener {
 		cons.gridheight = 2;
 		cons.gridwidth = 2;
 		cons.gridx = 0;
-		cons.gridy = 10;
+		cons.gridy = 11;
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
 		panel.add(scrollPane, cons);
@@ -171,7 +183,7 @@ public class Window extends JFrame implements FocusListener {
 		cons.gridheight = 3;
 		cons.gridwidth = 3;
 		cons.gridx = 2;
-		cons.gridy = 11;
+		cons.gridy = 12;
 		
 		panel.add(pnlChart, cons);
 	
@@ -184,8 +196,9 @@ public class Window extends JFrame implements FocusListener {
 		button.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				pearArea.setText(null);
 				controller.DataManager.reset();
-				chart.removeSeries("Symbol2"); //sattt till
+				chart.removeSeries("Symbol2");
 				if (DataManager.isValidDate(startDate.getText()) && DataManager.isValidDate(endDate.getText())) {
 					String dataSeries = (String) comboBox1.getSelectedItem();
 					String timeSeries = (String) comboBox2.getSelectedItem();
@@ -215,15 +228,9 @@ public class Window extends JFrame implements FocusListener {
 									textArea.append(controller.DataManager.makeString(dataSeries));
 								}
 							}
-							//compact funkar men int full
-							//probleem då int listorna e lika stor av två symboler
-							//test aapl + google = error pga ojämna tal
-							//aapl å A går men blir fel värden
-							//fix dataManager fö alla dataseries
+							
 							if(dataSeries.equals("open")) {
 								if (bothSymbolsChosen(symbol, symbol2)) {
-									//Måst kanske lägg till chart.removeSeries("Symbol2");
-
 									chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.openGraph, null);
 									XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.openGraph2);
 								} else {
@@ -307,9 +314,9 @@ public class Window extends JFrame implements FocusListener {
 						
 							comboBox1.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent e) {
+								String dataSeries = (String) comboBox1.getSelectedItem();
 								try {
 									textArea.setText(null);
-									String dataSeries = (String) comboBox1.getSelectedItem();
 									if(dataSeries.equals("open")) {
 										textArea.append(model.Model.openStr);
 										if (bothSymbolsChosen(symbol, symbol2)) {
@@ -323,30 +330,81 @@ public class Window extends JFrame implements FocusListener {
 									}
 									else if(dataSeries.equals("high")) {
 										textArea.append(model.Model.highStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.highGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.highGraph, null);
+										}
 									}
 									else if(dataSeries.equals("low")) {
 										textArea.append(model.Model.lowStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.lowGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.lowGraph, null);
+										}
 									}
 									else if(dataSeries.equals("close")) {
 										textArea.append(model.Model.closeStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.closeGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.closeGraph, null);
+										}
 									}
 									else if(dataSeries.equals("volume")) {
 										textArea.append(model.Model.volumeStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.volumeGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.volumeGraph, null);
+										}
 									}
 									else if(dataSeries.equals("adjusted close")) {
 										textArea.append(model.Model.adjustedCloseStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);										}
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.adjustedCloseGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.adjustedCloseGraph, null);
+										}
+									}
 									else if(dataSeries.equals("dividend amount")) {
 										textArea.append(model.Model.dividendAmountStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.dividendAmountGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.dividendAmountGraph, null);
+										}
 									}
+									
 									else if(dataSeries.equals("split coefficient")) {
 										textArea.append(model.Model.splitCoefficientStr);
-										chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);		
+										if (bothSymbolsChosen(symbol, symbol2)) {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
+											XYSeries series2 = chart.addSeries("Symbol2", model.Model.xlist, model.Model.splitCoefficientGraph2);
+										} else {
+											chart.removeSeries("Symbol2");
+											chart.updateXYSeries("Symbol1", model.Model.xlist, model.Model.splitCoefficientGraph, null);
+										}
 									}
 									
 									pnlChart.repaint();
@@ -354,7 +412,23 @@ public class Window extends JFrame implements FocusListener {
 									textArea.append(timeSeries + " does not contain " + dataSeries);
 								}
 								}
+								
 							});
+							pearButton.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									try {
+									pearArea.setText(null);
+									pearArea.append(controller.DataManager.calculatePear());
+									
+									} catch(IndexOutOfBoundsException e6) {
+										pearArea.setText(null);
+										pearArea.append("Choose two symbols");
+									}
+								}
+								
+							});
+							
 						}
 					}
 					catch (IllegalArgumentException e3) {
@@ -365,6 +439,9 @@ public class Window extends JFrame implements FocusListener {
 					} 
 					catch (JSONException e4) {
 						textArea.append("Please don't spam queries.");
+					}
+					catch (IndexOutOfBoundsException e7) {
+						textArea.append("One of the symbols only has recent data. \nPlease narrow the search ");
 					}
 					catch (IOException e1) {
 		
@@ -441,5 +518,7 @@ public class Window extends JFrame implements FocusListener {
 		} else return false;
 		
 	}
+	
+	
 	
 }
