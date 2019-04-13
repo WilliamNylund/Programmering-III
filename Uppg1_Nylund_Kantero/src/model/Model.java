@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Model {
+	
 	public static String openStr = "";
 	public static String highStr = "===Showing data for 2. high===\n";
 	public static String lowStr = "===Showing data for 3. low===\n";

@@ -215,7 +215,7 @@ public class DataManager {
 		return TimeSeries;
 		
 	}
-	public static void reset() {
+	public static void reset() { //resettar allt
 		model.Model.openStr = "===Showing data for 1. open===\n";
 		model.Model.highStr = "===Showing data for 2. high===\n";
 		model.Model.lowStr = "===Showing data for 3. low===\n";
@@ -245,7 +245,7 @@ public class DataManager {
 		model.Model.open.clear(); 
 		
 	}
-	private static void reverseLists() {
+	private static void reverseLists() { //svänger om grafens värden för att visa äldst -> minst
 		Collections.reverse(model.Model.openGraph);
 		Collections.reverse(model.Model.openGraph2);
 		Collections.reverse(model.Model.highGraph);
@@ -264,7 +264,7 @@ public class DataManager {
 		Collections.reverse(model.Model.splitCoefficientGraph2);
 
 	}
-	public static void getChoices() throws FileNotFoundException {
+	public static void getChoices() throws FileNotFoundException { //hämtar dropdownboxarnas innehåll
 		
 		Scanner scanner = new Scanner(new FileReader("./iniFiles/StockAnalyzer.ini"));
 		String apiKey = scanner.nextLine().split("=")[1];
@@ -307,7 +307,7 @@ public class DataManager {
         return true;
     }
 	
-	public static String calculatePear() { 
+	public static String calculatePear() {  //räknar ut Pearson Correlation Coefficient
 		//formeln tagen från https://study.com/academy/lesson/pearson-correlation-coefficient-formula-example-significance.html
 		//pearsons correlation coefficient är beräknad enligt close values.
 		
@@ -335,6 +335,7 @@ public class DataManager {
 	//Don't go deeper
 	
 	public static String makeStrings(String dataSeries, String symbol1, String symbol2) {
+		//skapar strängarna om man har valt 2 aktier
 		ArrayList openList1 = new ArrayList<String>();
 		ArrayList openList2 = new ArrayList<String>();
 		ArrayList highList1 = new ArrayList<String>();
@@ -437,7 +438,7 @@ public class DataManager {
 	}
 	
 	public static String makeString(String dataSeries) {
-		
+		//skapar strängarna om man har valt en aktie
 		for (int i = 0; i < model.Model.open.size(); i++) {
 			model.Model.openStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.open.get(i) + "\n";
 			model.Model.openGraph.add(Double.valueOf((String) model.Model.open.get(i)));

@@ -215,6 +215,7 @@ public class Window extends JFrame implements FocusListener {
 						if (symbol.equals("null") && symbol2.equals("null")) textArea.append("choose symbol");
 						else {
 							if (bothSymbolsChosen(symbol, symbol2)) {
+								
 								controller.DataManager.getData(dataSeries, timeSeries, symbol, timeInterval, outputSize, apiKey, sd, ed);
 								controller.DataManager.getData(dataSeries, timeSeries, symbol2, timeInterval, outputSize, apiKey, sd, ed);
 								textArea.append(controller.DataManager.makeStrings(dataSeries, symbol, symbol2));
@@ -504,12 +505,10 @@ public class Window extends JFrame implements FocusListener {
 	
 	@Override
 	public void focusGained(FocusEvent e) {
-		System.out.println("focusGained");
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		System.out.println("focusLost");
 		
 	}
 	public boolean bothSymbolsChosen(String Symbol, String Symbol2) {
