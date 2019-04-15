@@ -15,7 +15,11 @@ import JSON.JSONObject;
 import model.Model;
 
 public class DataManager {
-		
+	
+		static boolean runningFirstTime = true;
+		static int symbol1Size = 0;
+		static int symbol2Size = 0;
+	
 	public static void getData(String dataSeries, String ts, String sy, String ti, String os, String ak, String sd, String ed) throws IOException {
 		
 		
@@ -195,11 +199,12 @@ public class DataManager {
 			}
 			
 		}
-		
-
-		reverseLists(); //svänger om ordningen på listan med värden till graferna för att gå från äldst => nyast
-	
-		
+		if (runningFirstTime) { //kollar om getData hämtar symbol1 eller symbol2 aktierna
+			symbol1Size = model.Model.open.size(); 
+		} else { 
+			symbol2Size = Math.abs(model.Model.open.size() - symbol1Size);
+		}
+		runningFirstTime = false;
 	}
 	
 	static String getTimeSeries(String ts, String ti) { //hämtar rätt arraynamn
@@ -242,7 +247,17 @@ public class DataManager {
 		model.Model.splitCoefficientGraph2.clear();
 		model.Model.xlist.clear();
 		model.Model.date.clear();
-		model.Model.open.clear(); 
+		model.Model.open.clear();
+		model.Model.close.clear();
+		model.Model.low.clear();
+		model.Model.high.clear();
+		model.Model.volume.clear();
+		model.Model.adjustedClose.clear();
+		model.Model.dividendAmount.clear();
+		model.Model.splitCoefficient.clear();
+		runningFirstTime = true;
+		symbol1Size = 0;
+		symbol2Size = 0;
 		
 	}
 	private static void reverseLists() { //svänger om grafens värden för att visa äldst -> minst
@@ -331,11 +346,10 @@ public class DataManager {
 		return Double.toString(pear);
 	}
 	
-	
-	//Don't go deeper
-	
+		
 	public static String makeStrings(String dataSeries, String symbol1, String symbol2) {
 		//skapar strängarna om man har valt 2 aktier
+		
 		ArrayList openList1 = new ArrayList<String>();
 		ArrayList openList2 = new ArrayList<String>();
 		ArrayList highList1 = new ArrayList<String>();
@@ -353,8 +367,9 @@ public class DataManager {
 		ArrayList splitCoefficientList1 = new ArrayList<String>();
 		ArrayList splitCoefficientList2 = new ArrayList<String>();
 		
-		for (int i = 0; i < model.Model.open.size(); i++) {
-			if (i < (model.Model.open.size()+1)/2 ) {
+		int smallerSizedList = Math.min(symbol1Size, symbol2Size);
+		
+		for (int i = 0; i < smallerSizedList; i++) {
 				openList1.add(model.Model.open.get(i));
 				model.Model.openGraph.add(Double.valueOf((String) model.Model.open.get(i)));
 				
@@ -381,7 +396,8 @@ public class DataManager {
 				model.Model.splitCoefficientGraph.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
 				} catch (IndexOutOfBoundsException e1) {}
 			
-			} else {
+			}
+		for (int i = symbol1Size; i < symbol1Size + smallerSizedList; i++) {
 				openList2.add(model.Model.open.get(i));
 				model.Model.openGraph2.add(Double.valueOf((String) model.Model.open.get(i)));
 				
@@ -407,10 +423,10 @@ public class DataManager {
 				splitCoefficientList2.add(model.Model.splitCoefficient.get(i));
 				model.Model.splitCoefficientGraph2.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
 				} catch (IndexOutOfBoundsException e1) {}
-			}
 		}
+		
 
-		for (int i = 0; i < openList1.size(); i++) { 
+		for (int i = 0; i < smallerSizedList; i++) {
 			model.Model.openStr += model.Model.date.get(i) + ": " + symbol1 + " " + openList1.get(i) + "      " + symbol2 + " "+ openList2.get(i) + "\n";
 			model.Model.highStr += model.Model.date.get(i) + ": " + symbol1 + " " + highList1.get(i) + "      " + symbol2 + " "+ highList2.get(i) + "\n";
 			model.Model.lowStr += model.Model.date.get(i) + ": " + symbol1 + " " + lowList1.get(i) + "      " + symbol2 + " "+ lowList2.get(i) + "\n";
@@ -427,6 +443,8 @@ public class DataManager {
 			model.Model.xlist.add(i);
 		}
 		
+		reverseLists(); //svänger om ordningen på listan med värden till graferna för att gå från äldst => nyast
+
 		if(dataSeries.equals("open")) return model.Model.openStr;
 		else if(dataSeries.equals("high")) return model.Model.highStr;
 		else if(dataSeries.equals("low")) return model.Model.lowStr;
@@ -452,15 +470,17 @@ public class DataManager {
 			model.Model.closeStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.close.get(i) + "\n";
 			model.Model.closeGraph.add(Double.valueOf((String) model.Model.close.get(i)));
 			
-			try {
-			model.Model.splitCoefficientStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.splitCoefficient.get(i) + "\n";
-			model.Model.splitCoefficientGraph.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
-			
+			model.Model.volumeStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.volume.get(i) + "\n";
+			model.Model.volumeGraph.add(Double.valueOf((String) model.Model.volume.get(i)));
+			try {			
 			model.Model.dividendAmountStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.dividendAmount.get(i) + "\n";
 			model.Model.dividendAmountGraph.add(Double.valueOf((String) model.Model.dividendAmount.get(i)));
 			
 			model.Model.adjustedCloseStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.adjustedClose.get(i) + "\n";
 			model.Model.adjustedCloseGraph.add(Double.valueOf((String) model.Model.adjustedClose.get(i)));
+			
+			model.Model.splitCoefficientStr += "Date: " + model.Model.date.get(i) + ": " + model.Model.splitCoefficient.get(i) + "\n";
+			model.Model.splitCoefficientGraph.add(Double.valueOf((String) model.Model.splitCoefficient.get(i)));
 			} catch (IndexOutOfBoundsException e1) {}
 		}
 		
@@ -468,7 +488,8 @@ public class DataManager {
 		for(int i = 0; i < Model.openGraph.size(); i++) {
 			model.Model.xlist.add(i);
 		}
-		
+		reverseLists(); //svänger om ordningen på listan med värden till graferna för att gå från äldst => nyast
+
 		if(dataSeries.equals("open")) return model.Model.openStr;
 		else if(dataSeries.equals("high")) return model.Model.highStr;
 		else if(dataSeries.equals("low")) return model.Model.lowStr;

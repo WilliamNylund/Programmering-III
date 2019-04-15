@@ -412,6 +412,7 @@ public class Window extends JFrame implements FocusListener {
 								} catch (IllegalArgumentException e3) {
 									textArea.append(timeSeries + " does not contain " + dataSeries);
 								}
+								
 								}
 								
 							});
