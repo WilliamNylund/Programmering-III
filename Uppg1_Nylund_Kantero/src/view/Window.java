@@ -171,15 +171,15 @@ public class Window extends JFrame implements FocusListener {
 		double[] x1Data = new double[] {2};
 		double[] y1Data = new double[] {2};
 
-		XYChart chart = new XYChartBuilder().height(330).width(800).title("Stock graph").build();
+		XYChart chart = new XYChartBuilder().height(330).width(600).title("Stock graph").build();//w=800
 		chart.setXAxisTitle("Stockprices from old to new");
 		XYSeries series = chart.addSeries("Symbol1", xData, yData);		
 		
 		XYStyler styler = chart.getStyler();
 		JPanel pnlChart = new XChartPanel(chart);
-		
+				
 		pnlChart.validate();
-		
+
 		cons.gridheight = 3;
 		cons.gridwidth = 3;
 		cons.gridx = 2;
@@ -187,11 +187,38 @@ public class Window extends JFrame implements FocusListener {
 		
 		panel.add(pnlChart, cons);
 	
+		JMenuBar menuBar = new JMenuBar(); //menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Portfolio");
+		JMenuItem createPortfolioItem = new JMenuItem("Create Portfolio");
+		JMenu loadPortfolioItem = new JMenu("load Portfolio");
+		JMenuItem noPortfolios = new JMenuItem("No existing portfolios");
+		noPortfolios.setEnabled(false);
+		loadPortfolioItem.add(noPortfolios);
+		
+		menu.add(createPortfolioItem);
+		menu.add(loadPortfolioItem);
+		menuBar.add(menu);
+		frame.setJMenuBar(menuBar);
+		
+		
+		
 		
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
 		
+		//https://www.mkyong.com/java/how-to-read-and-write-java-object-to-a-file/
+		//loadPortfolioItem.remove(noPortfolios);
+		
+		createPortfolioItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("hej");
+				CreatePortfolio createWindow = new CreatePortfolio();
+				
+			}
+			
+		});
 		
 		button.addActionListener(new ActionListener(){
 			@Override
