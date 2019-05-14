@@ -18,6 +18,9 @@ import org.knowm.xchart.style.XYStyler;
 
 public class Window extends JFrame implements FocusListener {
 
+	public static JMenu loadPortfolioItem = new JMenu("load Portfolio");
+	public static JMenuItem noPortfolios;
+	
 	public Window() {
 		
 		JFrame frame = new JFrame("Stock Analyzer");
@@ -187,11 +190,11 @@ public class Window extends JFrame implements FocusListener {
 		
 		panel.add(pnlChart, cons);
 	
-		JMenuBar menuBar = new JMenuBar(); //menuBar = new JMenuBar();
+		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Portfolio");
 		JMenuItem createPortfolioItem = new JMenuItem("Create Portfolio");
-		JMenu loadPortfolioItem = new JMenu("load Portfolio");
-		JMenuItem noPortfolios = new JMenuItem("No existing portfolios");
+		//JMenu loadPortfolioItem = new JMenu("load Portfolio");
+		noPortfolios = new JMenuItem("No existing portfolios");
 		noPortfolios.setEnabled(false);
 		loadPortfolioItem.add(noPortfolios);
 		
@@ -210,14 +213,22 @@ public class Window extends JFrame implements FocusListener {
 		//https://www.mkyong.com/java/how-to-read-and-write-java-object-to-a-file/
 		//loadPortfolioItem.remove(noPortfolios);
 		
+		
+		
+		loadPortfolioItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("asd");
+			}
+			
+		});
+		
 		createPortfolioItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("hej");
 				CreatePortfolio createWindow = new CreatePortfolio();
-				
 			}
-			
 		});
 		
 		button.addActionListener(new ActionListener(){

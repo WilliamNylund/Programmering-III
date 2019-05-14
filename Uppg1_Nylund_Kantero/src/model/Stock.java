@@ -18,7 +18,7 @@ public class Stock implements Serializable {
 		Calendar date = Calendar.getInstance();
 		dateBought = sdf.format(date.getTime());
 	}
-	public String getDateCreated() {
+	public String getDateBought() {
 		return dateBought;
 	}
 	public String getSymbol() {

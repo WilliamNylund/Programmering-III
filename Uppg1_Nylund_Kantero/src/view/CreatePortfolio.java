@@ -2,6 +2,9 @@ package view;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,8 +37,6 @@ public class CreatePortfolio {
 		
 		if (!name.equals(null)){
 			Portfolio portfolio = new Portfolio(name);
-			
-			
 		}
 
 		/*JFrame frame = new JFrame("Create portfolio");

@@ -51,4 +51,6 @@ public class Model {
 
 	public static ArrayList date = new ArrayList<String>();
 	
+	public static ArrayList<Portfolio> portfolios = new ArrayList<Portfolio>();
+	
 }
