@@ -11,6 +11,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
+
+import javax.swing.JOptionPane;
+
 import JSON.JSONObject;
 import model.Model;
 
@@ -499,7 +502,55 @@ public class DataManager {
 		else if(dataSeries.equals("adjusted close")) return model.Model.adjustedCloseStr;
 		else return model.Model.volumeStr;
 	}
-
+	
+	public static double getStockPrice(String date, String symbol) throws IOException {
+		//hämtar priset för en aktie från alphavantage enligt symbol och datum
+		String url = "https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=" + symbol + "&interval=1min&outputsize=compact&apikey=INA6YDFMZ7TW5X4I";
+		String jsonDate = null;
+		Boolean priceNotFound = true;
+		String price = "";
+		try {
+			JSONObject json = JsonReader.readJsonFromUrl(url);
+			JSONObject tsObject =  (JSONObject) (json.get("Monthly Time Series")); 
+			
+			Iterator<String> keys = tsObject.keys();
+			while(keys.hasNext() && priceNotFound) { //loopar genom Time Series
+				String tempDate = keys.next();
+				jsonDate = tempDate.substring(0, 7);
+				if(jsonDate.equals(date)) {
+					JSONObject dateObject = (JSONObject) tsObject.get(tempDate);
+					price = (String) dateObject.get("4. close");
+				}
+			}
+			return Double.parseDouble(price);
+		} catch (JSON.JSONException e) {
+			JOptionPane.showMessageDialog(null,"Don't spam buy", "Ludacris error",JOptionPane.ERROR_MESSAGE);
+		}
+		return 0.0;
+	}
+	
+	
+	public static double getSellPrice(String symbol) throws IOException {  //hämtar sälj priset för idag
+		String url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=1min&outputsize=compact&apikey=INA6YDFMZ7TW5X4I";
+		String jsonDate = null;
+		String price = "";
+		try {
+		JSONObject json = JsonReader.readJsonFromUrl(url);
+		JSONObject tsObject =  (JSONObject) (json.get("Time Series (1min)")); 
+		
+		Iterator<String> keys = tsObject.keys();
+		String firstDate = keys.next();
+		JSONObject dateObject = (JSONObject) tsObject.get(firstDate);
+		price = (String) dateObject.get("4. close");
+		return Double.parseDouble(price);
+		}catch (JSON.JSONException e2) {
+			JOptionPane.showMessageDialog(null,
+				    "Don't spam sell", 
+				    "Insane error",
+				    JOptionPane.ERROR_MESSAGE);
+		}
+		return 0.0;
+	}
 	
 	
 }

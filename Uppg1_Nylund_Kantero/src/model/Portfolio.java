@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,7 +18,7 @@ import java.util.Date;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 
-import view.LoadPortfolio;
+import view.LoadPortfolioWindow;
 
 public class Portfolio implements Serializable, ActionListener {
 	
@@ -25,12 +26,9 @@ public class Portfolio implements Serializable, ActionListener {
 	String name;
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	String dateCreated;
+	double totalValue;
+	int amountOfStocks;
 	
-	//? ArrayList<String> stockNames = new ArrayList<String>();
-	// https://stackoverflow.com/questions/447898/what-is-object-serialization
-	// https://gist.github.com/Sietesoles/dae3a4959f36df3632a9
-	// man sko konn lag en list<Object>me portfolier som man serializerar
-	// .ser
 	
 	public Portfolio(String name) {
 		this.name = name;
@@ -38,14 +36,14 @@ public class Portfolio implements Serializable, ActionListener {
 		dateCreated = sdf.format(date.getTime());
 		JMenuItem portfolio = new JMenuItem(name);
 		portfolio.addActionListener(this);
-		view.Window.loadPortfolioItem.add(portfolio);
-		view.Window.loadPortfolioItem.remove(view.Window.noPortfolios);
+		view.MainWindow.loadPortfolioItem.add(portfolio);
+		view.MainWindow.loadPortfolioItem.remove(view.MainWindow.noPortfolios);
 		save();
 	}
 	public String getName() {
 		return name;
 	}
-	public void save() {
+	public void save() { //sparar portfolion i en .ser fil
 		Object[] portfolioValues = new Object[3];
 		portfolioValues[0] = this.name;
 		portfolioValues[1] = this.dateCreated;
@@ -63,7 +61,8 @@ public class Portfolio implements Serializable, ActionListener {
 		}
 	}
 	
-	public void load (String file) {
+	public void load (String file) {  //laddar portföljen från .ser filen
+		//Portfolierna sparas ej vid omstart av programmet
 		try {
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
@@ -80,10 +79,49 @@ public class Portfolio implements Serializable, ActionListener {
 	
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) { //öppnar portföljen
 		String portfolioName = e.getActionCommand();
 		load(portfolioName + ".ser");
-		LoadPortfolio loadWindow = new LoadPortfolio(this);
+		LoadPortfolioWindow loadWindow = new LoadPortfolioWindow(this);
 	}
+	public void addStock(Stock stock) { //sätter till aktien i portföljen
+		stocks.add(stock);
+	}
+	public void updatePortfolio() { //uppdaterar portföljens aktier samt totala värdet
+		this.totalValue = 0.0;
+		this.amountOfStocks = 0;
+		LoadPortfolioWindow.listModel.clear();
+		LoadPortfolioWindow.amountOfStocks.setText("");
+		for (int i = 0; i < stocks.size(); i++) {
+			String stockString;
+			Stock stock = stocks.get(i);
+			stockString = stock.getName() + ": " + Double.toString(stock.getValue()) + "  Date bought: " + stock.getDateBought();
+			LoadPortfolioWindow.listModel.addElement(stockString);
+			totalValue += stock.getValue();
+			amountOfStocks++;
+			LoadPortfolioWindow.amountOfStocks.setText("Amount of stocks: " + Integer.toString(amountOfStocks));
+			
+		}
+		
+		DecimalFormat numberFormat = new DecimalFormat("#.000");
+		LoadPortfolioWindow.totalValueField.setText(numberFormat.format(totalValue));
+		
+	}
+	public double getTotalValue() {
+		return totalValue;
+	}
+	public void removeStock(String symbol, String value) {
+		boolean symbolNotRemoved = true;
+		int i = 0;
+		while (symbolNotRemoved) {
+			Stock stock = stocks.get(i);
+			if (stock.getName().equals(symbol) && Double.toString(stock.getValue()).equals(value)) {
+				stocks.remove(i);
+				symbolNotRemoved = false;
+			}
+			i++;
+		}
+	}
+	
 	
 }

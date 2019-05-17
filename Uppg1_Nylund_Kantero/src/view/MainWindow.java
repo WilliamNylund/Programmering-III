@@ -16,12 +16,12 @@ import org.knowm.*;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.XYStyler;
 
-public class Window extends JFrame implements FocusListener {
+public class MainWindow extends JFrame implements FocusListener {
 
 	public static JMenu loadPortfolioItem = new JMenu("load Portfolio");
 	public static JMenuItem noPortfolios;
 	
-	public Window() {
+	public MainWindow() {
 		
 		JFrame frame = new JFrame("Stock Analyzer");
 		JPanel panel = new JPanel();
@@ -227,7 +227,7 @@ public class Window extends JFrame implements FocusListener {
 		createPortfolioItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CreatePortfolio createWindow = new CreatePortfolio();
+				CreatePortfolioWindow createWindow = new CreatePortfolioWindow();
 			}
 		});
 		
