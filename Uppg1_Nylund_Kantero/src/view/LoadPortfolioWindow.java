@@ -165,14 +165,7 @@ public class LoadPortfolioWindow { //Fönster för att visa portfolien
 
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				}
-
-																																					
-		
-				//ta bort ur array me stocks
-				//update
-				//hämt sellprice
-				//calc sell-buy
+				}																																				
 			}
 		
 		});
